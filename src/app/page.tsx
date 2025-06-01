@@ -24,8 +24,6 @@ export default function Home() {
   const { data: transactions = [], isLoading, error } = useTransactions();
   const [latestTransaction, ...rest] = transactions;
 
-  
-
   return (
     <div>
       {/* Header */}
@@ -61,11 +59,7 @@ export default function Home() {
           </div>
           {/* Buttons */}
           <div>
-            <Button
-              status="completed"
-            />
-            <Button 
-              status="rejected" />
+            {latestTransaction && <Button transactionID={latestTransaction.id}/>}
           </div>
           <div>
         <h2 className="text-3xl">Transaction History</h2>
@@ -74,6 +68,7 @@ export default function Home() {
             <ul className="border-2 p-4" key={ts.id}>
               <li className="">
                 status: {ts.status}, time: {ts.timestamp}
+                {ts.status === 'pending' ? <Button transactionID={ts.id}/> : null}
               </li>
             </ul>
           ))}
@@ -86,8 +81,6 @@ export default function Home() {
           <input type="file"></input>
         </div>
       </div>
-          
-      
     </div>
   );
 }
