@@ -1,103 +1,118 @@
-import Image from "next/image";
+"use client";
+import { db } from '@/lib/firebase';
+import { ref, query, limitToLast, orderByKey, get, update } from "firebase/database";
+import { useEffect, useState } from "react";
+import { useTransactions } from "@/hooks/useTransactions"; // adjust path
+
+type Transaction = {
+  id: string;
+  status: string;
+  timestamp: number;
+  imageUrl: string;
+}
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [loading, setLoading] = useState(false);
+  const { data: transactions = [], isLoading, error } = useTransactions();
+  const [latestTransaction, ...rest] = transactions;
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const updateStatus = async (newStatus: string) => {
+    setLoading(true);
+    try {
+      const transactonRef = ref(db, 'transactions');
+      const latestQuery = query(transactonRef, orderByKey(), limitToLast(1));
+      const snapshot = await get(latestQuery);
+      
+
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        const key = Object.keys(data)[0];
+        const transactionRef = ref(db, `transactions/${key}`);
+
+        await update(transactionRef, { status: newStatus });
+        alert(`Status set to "${newStatus}"`);
+      } else {
+        alert("No transaction found.");
+      }
+
+    } catch (err) {
+      console.error("Error updating status:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // const TransactionsList = () => {
+  //   const { data, isLoading, error } = useTransactions();
+
+  //   if (isLoading) return <p>Loading...</p>;
+  //   if (error) return <p>Error: {error.message}</p>;
+
+  //   return (
+  //     <ul>
+  //       {data?.map((tx) => (
+  //         <li key={tx.id}>
+  //           <p>Status: {tx.status}</p>
+  //           <p>Timestamp: {tx.timestamp}</p>
+  //           <img src={tx.imageUrl} alt="Transaction" width={100} />
+  //         </li>
+  //       ))}
+  //     </ul>
+  //   );
+  // };
+  
+  
+  
+  return (
+    <div>
+      {/* Header */}
+      <header className='border-b-2 border-gray-300 p-4'>
+        <h1 className='text-4xl'>GCam</h1>
+      </header>
+
+      {/* Main Container */}
+      <div className='flex'>
+
+        {/* Left Side */}
+        <div className='border-r-2 border-gray-300 p-4 w-3/5'>
+          <h2 className='text-3xl'>Latest Transaction</h2>
+          <div className='border-2 w-full h-96'>
+            {isLoading ? (
+              <p>Loading...</p>
+            ) : error ? (
+              <p>Error: {error.message}</p>
+            ) : latestTransaction ? (
+              <div>
+                <p>Status: {latestTransaction.status}</p>
+                <p>Timestamp: </p>
+                {latestTransaction.imageUrl && (
+                  <img src={latestTransaction.imageUrl} alt="Transaction" width={200} />
+                )}
+              </div>
+            ) : (
+              <p>No transactions found.</p>
+            )}
+          </div>
+          {/* Buttons */}
+          <div>
+            <button onClick={() => updateStatus("accepted")} className='border-2 p-4 bg-green-600'>TRANSACTION COMPLETE</button>
+            <button onClick={() => updateStatus("rejected")} className='border-2 p-4 bg-red-600'>REJECT TRANSACTION</button>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+        <div>
+          <h2>Upload File</h2>
+          <input type="file"></input>
+        </div>
+      
+      </div>
+
+      <div>
+        <h2 className='text-3xl'>Transaction History</h2>
+        <div className=''>
+          
+        </div>
+      </div>
     </div>
   );
 }
