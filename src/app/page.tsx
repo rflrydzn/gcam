@@ -22,7 +22,14 @@ type Transaction = {
 export default function Home() {
   const [loading, setLoading] = useState(false);
   const { data: transactions = [], isLoading, error } = useTransactions();
-  const [latestTransaction, ...rest] = transactions;
+
+  const sortedTransactions = [...transactions].sort((a, b) => {
+    if (a.status === "pending" && b.status !== "pending") return -1;
+    if (a.status !== "pending" && b.status === "pending") return 1;
+    return Number(b.timestamp) - Number(a.timestamp);
+  });
+
+  const [latestTransaction, ...rest] = sortedTransactions;
 
   return (
     <div>
