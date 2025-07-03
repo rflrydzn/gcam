@@ -7,6 +7,8 @@ type Transaction = {
     status: string;
     timestamp: string;
     imageUrl: string;
+    isRequested: boolean;
+    receiptimageUrl: string;
   };
   
   const fetchTransactions = async (): Promise<Transaction[]> => {
