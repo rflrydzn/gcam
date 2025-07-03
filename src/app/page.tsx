@@ -2,27 +2,27 @@
 import { db } from "@/lib/firebase";
 import {
   ref,
-  query,
-  limitToLast,
-  orderByKey,
-  get,
+  // query,
+  // limitToLast,
+  // orderByKey,
+  // get,
   update,
 } from "firebase/database";
 import { useEffect, useState } from "react";
 import { useTransactions } from "@/hooks/useTransactions"; // adjust path
 import Button from "@/components/Button";
 
-type Transaction = {
-  id: string;
-  status: string;
-  timestamp: number;
-  imageUrl: string;
-  isRequested: boolean;
-  receiptimageUrl: string;
-};
+// type Transaction = {
+//   id: string;
+//   status: string;
+//   timestamp: string;
+//   imageUrl: string;
+//   isRequested: boolean;
+//   receiptimageUrl: string;
+// };
 
 export default function Home() {
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const { data: transactions = [], isLoading, error } = useTransactions();
   const [file, setFile] = useState<File | null>(null)
 

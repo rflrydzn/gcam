@@ -2,16 +2,16 @@
 import { db } from "@/lib/firebase";
 import {
   ref,
-  query,
-  limitToLast,
-  orderByKey,
-  get,
+  // query,
+  // limitToLast,
+  // orderByKey,
+  // get,
   update,
 } from "firebase/database";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const Button = ({transactionID}: {transactionID: string}) => {
-    const [loading, setLoading] = useState(false);
+    const [, setLoading] = useState(false);
     const updateStatus = async (transactionID: string, newStatus: string) => {
         setLoading(true);
         try {

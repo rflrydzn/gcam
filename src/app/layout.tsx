@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { queryClient } from "@/lib/queryClient"; // Adjust the import path as necessary
 import QueryProvider from "@/components/queryProvider";
 
 
