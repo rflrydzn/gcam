@@ -26,21 +26,30 @@ export default function Home() {
   const { data: transactions = [], isLoading, error } = useTransactions();
   const [file, setFile] = useState<File | null>(null)
 
+  const getPriorityScore = (transactions: any) => {
+    if (transactions.isRequested === true && transactions.hasDisplayed === false) return 100
+    if (transactions.status === 'pending') return 80
+    return 0
+  }
+
   const sortedTransactions = [...transactions].sort((a, b) => {
-    const aNeedsReceipt = a.isRequested === true && a.receiptimageUrl === "";
-    const bNeedsReceipt = b.isRequested === true && b.receiptimageUrl === "";
-  
-    if (aNeedsReceipt && !bNeedsReceipt) return -1;
-    if (!aNeedsReceipt && bNeedsReceipt) return 1;
-  
-    const aPending = a.status === "pending";
-    const bPending = b.status === "pending";
-  
-    if (aPending && !bPending) return -1;
-    if (!aPending && bPending) return 1;
-  
-    return Number(b.timestamp) - Number(a.timestamp);
+    return getPriorityScore(b) - getPriorityScore(a)
   });
+  // const sortedTransactions = [...transactions].sort((a, b) => {
+  //   const aNeedsReceipt = a.isRequested === true && a.receiptimageUrl === "";
+  //   const bNeedsReceipt = b.isRequested === true && b.receiptimageUrl === "";
+  
+  //   if (aNeedsReceipt && !bNeedsReceipt) return -1;
+  //   if (!aNeedsReceipt && bNeedsReceipt) return 1;
+  
+  //   const aPending = a.status === "pending";
+  //   const bPending = b.status === "pending";
+  
+  //   if (aPending && !bPending) return -1;
+  //   if (!aPending && bPending) return 1;
+  
+  //   return Number(b.timestamp) - Number(a.timestamp);
+  // });
 
   const [latestTransaction, ...rest] = sortedTransactions;
   useEffect(() => console.log("rest", rest), [rest]);
@@ -72,6 +81,7 @@ export default function Home() {
       console.error("Error uploading receipt:", err);
   }
 };
+
   return (
     <div>
       {/* Header */}
@@ -92,8 +102,9 @@ export default function Home() {
             ) : latestTransaction ? (
               <div>
                 <p>Status: {latestTransaction.status}</p>
-                <p>Timestamp: </p>
-                <p>isRequested: {latestTransaction.isRequested}</p>
+                <p>Timestamp: {latestTransaction.timestamp}</p>
+                <p>isRequested: {latestTransaction.isRequested ? "true" : "false"}</p>
+                <p>hasDisplayed: {latestTransaction.hasDisplayed ? "true" : "false"}</p>
                 <p>{latestTransaction.receiptimageUrl != "" ? 'uploaded' : 'null'}</p>
                 {latestTransaction.imageUrl && (
                   <img

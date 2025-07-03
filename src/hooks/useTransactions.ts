@@ -9,6 +9,7 @@ type Transaction = {
     imageUrl: string;
     isRequested: boolean;
     receiptimageUrl: string;
+    hasDisplayed: boolean;
   };
   
   const fetchTransactions = async (): Promise<Transaction[]> => {
