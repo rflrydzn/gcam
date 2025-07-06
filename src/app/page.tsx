@@ -11,20 +11,13 @@ import {
 import { useEffect, useState } from "react";
 import { useTransactions } from "@/hooks/useTransactions"; // adjust path
 import Button from "@/components/Button";
-
-// type Transaction = {
-//   id: string;
-//   status: string;
-//   timestamp: string;
-//   imageUrl: string;
-//   isRequested: boolean;
-//   receiptimageUrl: string;
-// };
+import TransactionDetails from "@/components/TransactionDetails";
 
 export default function Home() {
-  // const [loading, setLoading] = useState(false);
   const { data: transactions = [], isLoading, error } = useTransactions();
-  const [file, setFile] = useState<File | null>(null)
+  const [file, setFile] = useState<File | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedTransaction, setSelectedTransaction] = useState(null);
 
   const getPriorityScore = (transactions: any) => {
     if (transactions.isRequested === true && transactions.hasDisplayed === false) return 100
@@ -35,123 +28,123 @@ export default function Home() {
   const sortedTransactions = [...transactions].sort((a, b) => {
     return getPriorityScore(b) - getPriorityScore(a)
   });
-  // const sortedTransactions = [...transactions].sort((a, b) => {
-  //   const aNeedsReceipt = a.isRequested === true && a.receiptimageUrl === "";
-  //   const bNeedsReceipt = b.isRequested === true && b.receiptimageUrl === "";
-  
-  //   if (aNeedsReceipt && !bNeedsReceipt) return -1;
-  //   if (!aNeedsReceipt && bNeedsReceipt) return 1;
-  
-  //   const aPending = a.status === "pending";
-  //   const bPending = b.status === "pending";
-  
-  //   if (aPending && !bPending) return -1;
-  //   if (!aPending && bPending) return 1;
-  
-  //   return Number(b.timestamp) - Number(a.timestamp);
-  // });
 
   const [latestTransaction, ...rest] = sortedTransactions;
   useEffect(() => console.log("rest", rest), [rest]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setFile(e.target.files[0]);
-    }
-  }
 
-  const handleUpload = async (transactionID: string) => {
-    if (!file) return;
+let formatted = "";
+if (latestTransaction && latestTransaction.timestamp) {
+  const original = latestTransaction.timestamp;
+  const date = new Date(original.replace(" ", "T"));
 
-    const formData = new FormData();
-    formData.append("image", file);
+  const options: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "long",
+    day: "2-digit",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  };
 
-    const res = await fetch("https://rddizon.pythonanywhere.com/receipt", {
-      method: "POST",
-      body: formData,
-    });
+  formatted = date.toLocaleString("en-US", options)
+    .replace(" at ", " ")
+    .replace(",", "")
+    .replace("AM", "am")
+    .replace("PM", "pm");
+}
 
-    const result = await res.json();
-    try {
-      const transactionRef = ref(db, `transactions/${transactionID}`);
-  
-      await update(transactionRef, { receiptimageUrl: result.url });
-      alert(`Receipt uploaded`);
-    } catch (err) {
-      console.error("Error uploading receipt:", err);
-  }
-};
+function timeAgo(dateString: string) {
+  const createdAt = new Date(dateString.replace(" ", "T")); // ensure valid ISO format
+  const now = new Date();
+  const diffMs = now.getTime() - createdAt.getTime();
 
+  const seconds = Math.floor(diffMs / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+
+  if (seconds < 60) return `${seconds} sec${seconds === 1 ? "" : "s"} ago`;
+  if (minutes < 60) return `${minutes} min${minutes === 1 ? "" : "s"} ago`;
+  if (hours < 24) return `${hours} hour${hours === 1 ? "" : "s"} ago`;
+  return `${days} day${days === 1 ? "" : "s"} ago`;
+}
+
+const handleModal = (tx: any) => {
+  setModalOpen(true);
+  setSelectedTransaction(tx)
+}
   return (
-    <div>
-      {/* Header */}
-      <header className="border-b-2 border-gray-300 p-4">
-        <h1 className="text-4xl">GCam</h1>
+    <div className="bg-[#FFFFFF] w-full min-h-screen">
+      <header className=" bg-[#007AFF] text-white text-center py-4">
+        <h1 className="text-3xl font-bold">GCam</h1>
       </header>
+      <div className="">
+        
+        {latestTransaction ? (
+        <div className="border border-gray-300 rounded-lg shadow-md m-2 p-3 bg-white space-y-0.5">
+        <span className={'inline-block uppercase p-1 ' + (latestTransaction.status === 'pending' ? 'bg-[#ffee99]' : latestTransaction.status === 'completed' ? 'bg-[#e5f9ef]' : 'bg-[#FF9800]')}>{latestTransaction.status}</span>
+        
+        <p className="text-[#666666] block">{formatted}</p>
+        <img src={latestTransaction.imageUrl} className="rounded-lg"/>
+        
+          <Button transactionID={latestTransaction.id}/>
+        
+      </div>
+      ) : (<p>loading</p>)}
+      </div>
 
-      {/* Main Container */}
-      <div className="flex">
-        {/* Left Side */}
-        <div className="border-r-2 border-gray-300  w-3/5">
-          <h2 className="text-3xl">Latest Transaction</h2>
-          <div className="border-2 w-full h-96">
-            {isLoading ? (
-              <p>Loading...</p>
-            ) : error ? (
-              <p>Error: {error.message}</p>
-            ) : latestTransaction ? (
-              <div>
-                <p>Status: {latestTransaction.status}</p>
-                <p>Timestamp: {latestTransaction.timestamp}</p>
-                <p>isRequested: {latestTransaction.isRequested ? "true" : "false"}</p>
-                <p>hasDisplayed: {latestTransaction.hasDisplayed ? "true" : "false"}</p>
-                <p>{latestTransaction.receiptimageUrl != "" ? 'uploaded' : 'null'}</p>
-                {latestTransaction.imageUrl && (
+      <div>
+        
+        <div className="relative flex flex-col my-6 bg-white shadow-sm border border-slate-200 rounded-lg w-96">
+          <div className="p-4">
+            <div className="mb-4 flex items-center justify-between">
+              <h5 className="text-slate-800 text-lg font-semibold">
+                Latest Customers
+              </h5>
+              <a
+                href="#"
+                className="text-slate-600"
+              >
+                View all
+              </a>
+            </div>
+            <div className="divide-y divide-slate-200">
+            {rest.map((tx, index) => (
+              <div key={tx.id} className="flex items-center justify-between pb-3 pt-3 last:pb-0" onClick={()=> handleModal(tx)}>
+
+                <div className="flex items-center gap-x-3">
                   <img
-                    src={latestTransaction.imageUrl}
-                    alt="Transaction"
-                    width={200}
+                    src="https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-1.jpg"
+                    alt="Maria Jimenez"
+                    className="relative inline-block h-8 w-8 rounded-full object-cover object-center"
                   />
-                )}
+                  <div>
+                    <h6 className="text-slate-800 font-semibold">
+                      {tx.status}
+                    </h6>
+                    <p className="text-slate-600 text-sm">
+                      maria@gmail.com
+                    </p>
+                  </div>
+                </div>
+                <h6 className="text-slate-600 font-medium">
+                  {timeAgo(tx.timestamp)}
+                </h6>
               </div>
-            ) : (
-              <p>No transactions found.</p>
-            )}
-          </div>
-          {/* Buttons */}
-          <div>
-            {latestTransaction && (
-              <div>
-              <Button transactionID={latestTransaction.id} />
-              <input type="file" onChange={handleChange}></input>
-              <button onClick={() => handleUpload(latestTransaction.id)}>Upload now</button>
-              </div>
+            ))}
+            
               
-            )}
-          </div>
-          <h2>Upload File</h2>
-           {/* <input type="file" onChange={handleChange}></input>
-           <button onClick={handleUpload}>Upload now</button> */}
-        </div>
-        {/* Right Side */}
-        <div className="w-2/5">
-          <div>
-            <h2 className="text-3xl">Transaction History</h2>
-            
-              {rest.map((ts) => (
-                <ul className="border-2 p-4" key={ts.id}>
-                  <li className="flex items-center justify-between gap-2">
-                    status: {ts.status}, time: {ts.timestamp}
-                    {ts.status === "pending" ? (
-                      <div className="flex gap-2"><Button transactionID={ts.id} /></div>
-                    ) : null}
-                  </li>
-                </ul>
-              ))}
-            
+              
+              </div>
+
+                              {selectedTransaction && (<TransactionDetails isOpen={modalOpen} data={selectedTransaction} onClose={()=> setModalOpen(false)}/>
+)}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+      
+
   );
 }
