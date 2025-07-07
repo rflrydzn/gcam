@@ -18,7 +18,7 @@ const TransactionDetails = ({ data, isOpen, onClose }: ModalProps) => {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black"
       onClick={onClose} // close when clicking outside
     >
       <div
