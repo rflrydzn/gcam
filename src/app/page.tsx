@@ -1,12 +1,12 @@
 "use client";
-import { db } from "@/lib/firebase";
+// import { db } from "@/lib/firebase";
 import {
-  ref,
+  // ref,
   // query,
   // limitToLast,
   // orderByKey,
   // get,
-  update,
+  // update,
 } from "firebase/database";
 import { useEffect, useState } from "react";
 import { useTransactions } from "@/hooks/useTransactions"; // adjust path
@@ -14,14 +14,26 @@ import Button from "@/components/Button";
 import TransactionDetails from "@/components/TransactionDetails";
 import TransactionHistory from "@/components/TransactionHistory";
 
+
+type Transaction = {
+    id: string;
+    status: string;
+    timestamp: string;
+    imageUrl: string;
+    isRequested: boolean;
+    receiptimageUrl: string;
+    hasDisplayed: boolean;
+  };
+
+
 export default function Home() {
-  const { data: transactions = [], isLoading, error } = useTransactions();
-  const [file, setFile] = useState<File | null>(null);
+  const { data: transactions = [] } = useTransactions();
+  // const [file, setFile] = useState<File | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedTransaction, setSelectedTransaction] = useState(null);
   const [showTransactionHistory, setShowTransactionHistory] = useState(false);
 
-  const getPriorityScore = (transactions: any) => {
+  const getPriorityScore = (transactions: Transaction) => {
     if (
       transactions.isRequested === true &&
       transactions.hasDisplayed === false
@@ -113,7 +125,7 @@ export default function Home() {
             </span>
 
             <p className="text-[#666666] block">{formatted}</p>
-            <img src={latestTransaction.imageUrl} className="rounded-lg" />
+            <img src={latestTransaction.imageUrl} className="rounded-lg" alt="transaction image"/>
 
             <Button transactionID={latestTransaction.id} />
           </div>
@@ -137,7 +149,7 @@ export default function Home() {
               </button>
             </div>
             <div className="divide-y divide-slate-200">
-              {rest.map((tx, index) => (
+              {rest.map((tx) => (
                 <div
                   key={tx.id}
                   className="flex items-center justify-between pb-3 pt-3 last:pb-0"

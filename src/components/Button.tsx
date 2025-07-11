@@ -11,7 +11,7 @@ import {
 import { useState } from "react";
 
 const Button = ({ transactionID }: { transactionID: string }) => {
-  const [file, setFile] = useState<File | null>(null);
+  // const [file, setFile] = useState<File | null>(null);
   const [, setLoading] = useState(false);
   const updateStatus = async (transactionID: string, newStatus: string) => {
     setLoading(true);

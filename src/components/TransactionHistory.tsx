@@ -13,7 +13,6 @@ interface TransactionProps {
   data: Transaction[];
   onClose: () => void;
 }
-import TransactionDetails from "./TransactionDetails";
 const TransactionHistory = ({ data, onClose }: TransactionProps) => {
   return (
     <div>
