@@ -16,7 +16,7 @@ interface TransactionProps {
 const TransactionHistory = ({ data, onClose }: TransactionProps) => {
   return (
     <div>
-      <div className=" flex flex-col  bg-white  border-slate-200 rounded-lg w-96 ">
+      <div className=" flex flex-col  bg-white  border-slate-200 rounded-lg w-96 absolute z-50">
         <div className="p-4">
           <div className="mb-4 flex items-center justify-between">
             <button onClick={onClose}>Back</button>

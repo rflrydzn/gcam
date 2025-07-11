@@ -149,7 +149,7 @@ export default function Home() {
               </button>
             </div>
             <div className="divide-y divide-slate-200">
-              {rest.map((tx) => (
+              {rest.slice(0, 5).map((tx) => (
                 <div
                   key={tx.id}
                   className="flex items-center justify-between pb-3 pt-3 last:pb-0"
