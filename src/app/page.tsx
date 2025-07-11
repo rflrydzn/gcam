@@ -30,7 +30,7 @@ export default function Home() {
   const { data: transactions = [] } = useTransactions();
   // const [file, setFile] = useState<File | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
-  const [selectedTransaction, setSelectedTransaction] = useState(null);
+  const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
   const [showTransactionHistory, setShowTransactionHistory] = useState(false);
 
   const getPriorityScore = (transactions: Transaction) => {
@@ -89,7 +89,7 @@ export default function Home() {
     return `${days} day${days === 1 ? "" : "s"} ago`;
   }
 
-  const handleModal = (tx: any) => {
+  const handleModal = (tx: Transaction) => {
     setModalOpen(true);
     setSelectedTransaction(tx);
   };
