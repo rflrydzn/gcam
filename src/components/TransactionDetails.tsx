@@ -13,6 +13,8 @@ interface ModalProps {
   };
 }
 
+
+import Button from "./Button";
 const TransactionDetails = ({ data, isOpen, onClose }: ModalProps) => {
   if (!isOpen) return null;
 
@@ -37,12 +39,8 @@ const TransactionDetails = ({ data, isOpen, onClose }: ModalProps) => {
         >
           &times;
         </button>
-        <button
-          onClick={onClose}
-          className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-        >
-          Close
-        </button>
+
+        <Button transactionID={data.id}/>
       </div>
     </div>
   );
