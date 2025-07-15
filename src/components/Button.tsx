@@ -9,17 +9,26 @@ import {
   update,
 } from "firebase/database";
 import { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
 
-const Button = ({ transactionID }: { transactionID: string }) => {
+type ButtonProps = {
+  transactionID: string;
+  onAccept?: ()=> void;
+  onReject?: ()=> void;
+}
+const Button = ({ transactionID, onAccept, onReject }: ButtonProps ) => {
   // const [file, setFile] = useState<File | null>(null);
   const [, setLoading] = useState(false);
+  const [, setIsUploading] = useState(false);
   const updateStatus = async (transactionID: string, newStatus: string) => {
     setLoading(true);
     try {
       const transactionRef = ref(db, `transactions/${transactionID}`);
 
       await update(transactionRef, { status: newStatus });
-      alert(`Status set to "${newStatus}"`);
+      if (newStatus === 'completed' && onAccept) onAccept()
+      if (newStatus === 'rejected' && onReject) onReject()
     } catch (err) {
       console.error("Error updating status:", err);
     } finally {
@@ -30,6 +39,7 @@ const Button = ({ transactionID }: { transactionID: string }) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    setIsUploading(true)
     const formData = new FormData();
     formData.append("image", file);
 
@@ -46,27 +56,28 @@ const Button = ({ transactionID }: { transactionID: string }) => {
       alert(`Receipt uploaded`);
     } catch (err) {
       console.error("Error uploading receipt:", err);
+      setIsUploading(false)
     }
   };
 
   return (
-    <div className="flex justify-between text-2xl ">
+    <div className="flex justify-between w-full">
       <button
-        className="flex items-center rounded-md border border-slate-300 py-2 px-4 text-center text-sm transition-all shadow-sm hover:shadow-lg text-slate-600 hover:text-white hover:bg-slate-800 hover:border-slate-800 focus:text-white focus:bg-slate-800 focus:border-slate-800 active:border-slate-800 active:text-white active:bg-slate-800 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+        className="px-6 py-3 bg-[#1A1A1A] text-white rounded-3xl text-[14px] leading-4"
         onClick={() => updateStatus(transactionID, "completed")}
       >
         Accept
       </button>
 
       <button
-        className="flex items-center rounded-md border border-slate-300 py-2 px-4 text-center text-sm transition-all shadow-sm hover:shadow-lg text-slate-600 hover:text-white hover:bg-slate-800 hover:border-slate-800 focus:text-white focus:bg-slate-800 focus:border-slate-800 active:border-slate-800 active:text-white active:bg-slate-800 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+        className="px-6 py-3 bg-[#1A1A1A] text-white rounded-3xl text-[14px] leading-4"
         onClick={() => updateStatus(transactionID, "rejected")}
       >
         Reject
       </button>
-      <label className="flex items-center rounded-md bg-gradient-to-tr from-slate-800 to-slate-700 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-sm hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none">
+      <label className="px-6 py-3 bg-[#1A1A1A] text-white rounded-3xl text-[14px] leading-4">
 
-        Upload File
+        <FontAwesomeIcon icon={faCloudArrowUp}/> Upload
         <input type="file" className="hidden" onChange={handleChange(transactionID)} />
       </label>
     </div>

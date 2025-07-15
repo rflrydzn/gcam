@@ -1,22 +1,23 @@
 "use client";
-import { db } from "@/lib/firebase";
-import {
-  ref,
-  // query,
-  // limitToLast,
-  // orderByKey,
-  // get,
-  update,
-} from "firebase/database";
+// import { db } from "@/lib/firebase";
+// import {
+//   ref,
+//   query,
+//   limitToLast,
+//   orderByKey,
+//   get,
+//   update,
+// } from "firebase/database";
 import { useEffect, useState } from "react";
 import { useTransactions } from "@/hooks/useTransactions"; // adjust path
-import Button from "@/components/Button";
 import TransactionDetails from "@/components/TransactionDetails";
 import TransactionHistory from "@/components/TransactionHistory";
 import Image from "next/image";
 import CashinIcon from "../../public/cashin2.png";
-import { useSwipeable } from "react-swipeable";
-import SwipeCard from "@/components/SwipeCard";
+import ReceiptIcon from "../../public/receipt.png"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleUser } from "@fortawesome/free-solid-svg-icons";
+import TransactionCard from "@/components/TransactionCard";
 
 type Transaction = {
   id: string;
@@ -36,70 +37,51 @@ export default function Home() {
     useState<Transaction | null>(null);
   const [showTransactionHistory, setShowTransactionHistory] = useState(false);
 
-  const swipeHandlers = useSwipeable({
-    onSwipedLeft: () => {
-      if (latestTransaction) updateStatus(latestTransaction.id, "completed");
-    },
-    onSwipedRight: () => {
-      if (latestTransaction) updateStatus(latestTransaction.id, "rejected");
-    },
-    delta: 50,
-    preventScrollOnSwipe: true,
-    trackMouse: true,
-  });
+  const getPriorityScore = (transaction: Transaction) => {
+  if (transaction.isRequested && !transaction.hasDisplayed && transaction.status !== "rejected") return 100;
+  if (transaction.status === "pending") return 80;
+  if (transaction.hasDisplayed === true) return 0;
+  return 0;
+};
 
-  const updateStatus = async (transactionID: string, newStatus: string) => {
-    try {
-      const transactionRef = ref(db, `transactions/${transactionID}`);
-      await update(transactionRef, { status: newStatus });
-      alert(`Status set to "${newStatus}"`);
-    } catch (err) {
-      console.error("Error updating status:", err);
-    }
-  };
+// Split into two groups: scored and unscored
+const scored = transactions.filter((tx) => getPriorityScore(tx) > 0);
+const unscored = transactions.filter((tx) => getPriorityScore(tx) === 0);
 
-  const getPriorityScore = (transactions: Transaction) => {
-    if (
-      transactions.isRequested === true &&
-      transactions.hasDisplayed === false
-    )
-      return 100;
-    if (transactions.status === "pending") return 80;
-    return 0;
-  };
+// Sort only the scored ones
+const sortedScored = scored.sort((a, b) => getPriorityScore(b) - getPriorityScore(a));
 
-  const sortedTransactions = [...transactions].sort((a, b) => {
-    return getPriorityScore(b) - getPriorityScore(a);
-  });
-
-  const [latestTransaction, ...rest] = sortedTransactions;
-  useEffect(() => console.log("rest", rest), [rest]);
+// Then destructure
+const [latestTransaction, ] = sortedScored;
+  useEffect(() => console.log("latest", latestTransaction), [latestTransaction]);
   useEffect(
-    () => console.log("sorted", sortedTransactions),
-    [sortedTransactions]
+    () => console.log("pending", scored),
+    [scored]
+  
   );
+  useEffect(()=> console.log("history", unscored), [])
 
-  let formatted = "";
-  if (latestTransaction && latestTransaction.timestamp) {
-    const original = latestTransaction.timestamp;
-    const date = new Date(original.replace(" ", "T"));
+  // let formatted = "";
+  // if (latestTransaction && latestTransaction.timestamp) {
+  //   const original = latestTransaction.timestamp;
+  //   const date = new Date(original.replace(" ", "T"));
 
-    const options: Intl.DateTimeFormatOptions = {
-      year: "numeric",
-      month: "long",
-      day: "2-digit",
-      hour: "numeric",
-      minute: "2-digit",
-      hour12: true,
-    };
+  //   const options: Intl.DateTimeFormatOptions = {
+  //     year: "numeric",
+  //     month: "long",
+  //     day: "2-digit",
+  //     hour: "numeric",
+  //     minute: "2-digit",
+  //     hour12: true,
+  //   };
 
-    formatted = date
-      .toLocaleString("en-US", options)
-      .replace(" at ", " ")
-      .replace(",", "")
-      .replace("AM", "am")
-      .replace("PM", "pm");
-  }
+  //   formatted = date
+  //     .toLocaleString("en-US", options)
+  //     .replace(" at ", " ")
+  //     .replace(",", "")
+  //     .replace("AM", "am")
+  //     .replace("PM", "pm");
+  // }
 
   function timeAgo(dateString: string) {
     const createdAt = new Date(dateString.replace(" ", "T")); // ensure valid ISO format
@@ -127,24 +109,31 @@ export default function Home() {
     window.scrollTo({ top: 0, behavior: "instant" });
   };
   return (
-    <div className="bg-[#FFFFFF] w-full min-h-screen">
-      <header className=" bg-slate-800 text-white text-center py-4">
-        <h1 className="text-3xl font-bold">GCam</h1>
-      </header>
-      {/* <SwipeCard /> */}
+    <div>
       {showTransactionHistory && (
         <div className="absolute">
           <TransactionHistory
-            data={sortedTransactions}
+            data={unscored}
             onClose={() => setShowTransactionHistory(false)}
           />
         </div>
       )}
+    <div className="bg-[#FFFFFF] mx-5 ">
+      
+      {/* <header className=" bg-slate-800 text-white text-center py-4">
+        <h1 className="text-3xl font-bold">GCam</h1>
+      </header> */}
+      
+      <div className="flex items-center my-3">
+        <FontAwesomeIcon icon={faCircleUser} size="3x"/>
+        <h1 className="text-2xl m-3">Hi, Admin Roy!</h1>
+      </div>
+      
 
-      <div
+      {/* <div
         {...swipeHandlers}
         className="relative flex flex-col bg-white text-gray-700 shadow-md w-full overflow-hidden rounded-xl transition-transform duration-300"
-      >
+      > */}
         {/* {latestTransaction ? (
           <div className="border border-gray-300 rounded-lg shadow-md m-2 p-3 bg-white space-y-0.5">
             <span
@@ -169,7 +158,7 @@ export default function Home() {
           <p>loading</p>
         )} */}
 
-        {latestTransaction ? (
+        {/* {latestTransaction ? (
           <>
             <div className="relative">
               <img
@@ -206,14 +195,65 @@ export default function Home() {
         ) : (
           <div className="p-6 text-center text-gray-400">Loading...</div>
         )}
+      </div> */}
+      {latestTransaction ? (
+        <TransactionCard transaction={latestTransaction} timeAgo={timeAgo}/>
+      ) : (<p>Loading...</p>)}
+
+      
+      
+      <div>
+        <div className="relative flex flex-col my-9 w-full ">
+          <div className="">
+            <div className="flex items-center justify-between">
+              <h5 className="text-slate-800 text-2xl font-semibold">
+                Pending Transactions
+              </h5>
+              
+            </div>
+            <div className="max-h-64 overflow-y-auto">
+              {scored.map((tx) => (
+                <div
+                  key={tx.id}
+                  className="flex items-center justify-between pb-3 pt-3 last:pb-0"
+                  onClick={() => handleModal(tx)}
+                >
+                  <div className="flex items-center gap-x-3">
+                    <Image
+                      src={tx.isRequested ? (ReceiptIcon) : (CashinIcon)}
+                      alt="cashinicon"
+                      className="relative inline-block h-8 w-8 rounded-full object-cover object-center"
+                    />
+                    <div>
+                      <h6 className="text-slate-800 font-semibold">
+                        {tx.isRequested ? ('Requesting receipt') : ('Cash-In')}
+                      </h6>
+                      <p className="text-slate-600 text-sm">{timeAgo(tx.timestamp)}</p>
+                    </div>
+                  </div>
+                              <button className="px-5 py-2.5 bg-[#1A1A1A] text-white rounded-3xl text-[14px] leading-4">OPEN</button>
+
+                </div>
+              ))}
+            </div>
+
+            {selectedTransaction && (
+              <TransactionDetails
+                isOpen={modalOpen}
+                data={selectedTransaction}
+                onClose={() => setModalOpen(false)}
+              />
+            )}
+          </div>
+        </div>
       </div>
 
-      <div>
-        <div className="relative flex flex-col my-6 bg-white shadow-sm border border-slate-200 rounded-lg w-full">
-          <div className="p-4">
-            <div className="mb-4 flex items-center justify-between">
-              <h5 className="text-slate-800 text-lg font-semibold">
-                Latest Customers
+       <div>
+        <div className="relative flex flex-col my-6 bg-white w-full">
+          <div className="">
+            <div className="flex items-center justify-between">
+              <h5 className="text-slate-800 text-2xl font-semibold">
+                Other Transactions
               </h5>
               <button
                 onClick={handleTransactionHistory}
@@ -223,18 +263,14 @@ export default function Home() {
               </button>
             </div>
             <div className="divide-y divide-slate-200">
-              {rest.slice(0, 5).map((tx) => (
+              {unscored.slice(0, 3).map((tx) => (
                 <div
                   key={tx.id}
                   className="flex items-center justify-between pb-3 pt-3 last:pb-0"
                   onClick={() => handleModal(tx)}
                 >
                   <div className="flex items-center gap-x-3">
-                    <Image
-                      src={CashinIcon}
-                      alt="cashinicon"
-                      className="relative inline-block h-8 w-8 rounded-full object-cover object-center"
-                    />
+                    
                     <div>
                       <h6 className="text-slate-800 font-semibold">
                         {tx.status}
@@ -259,6 +295,7 @@ export default function Home() {
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 }

@@ -1,1 +1,5 @@
 @import "tailwindcss";
+
+h1 {
+  font-family: 'Balsamiq Sans', cursive;
+}

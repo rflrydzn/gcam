@@ -1,0 +1,173 @@
+.upload {
+  --background: #FFFFFF;
+  --text-drop: #CAC8CA;
+  --text-upload: #2D2C2F;
+  --progress-color: #E7E5E7;
+  --arrow-color: #1D2A3D;
+  --border-radius: 16px;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0; left: 0;
+  z-index: 10;
+  border-radius: var(--border-radius);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--background);
+  backdrop-filter: blur(5px);
+  overflow: hidden;
+}
+
+.text-upload {
+  color: var(--text-upload);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 18px;
+  position: absolute;
+  top: 20px;
+}
+
+.progress-wrapper {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  animation: rotate 2s linear infinite;
+}
+
+.progress {
+  fill: none;
+  stroke: var(--progress-color);
+  stroke-width: 6;
+  stroke-dasharray: 380;
+  stroke-dashoffset: 150;
+  animation: dash 2s ease-in-out infinite;
+}
+
+.arrow-icon {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  z-index: 2;
+}
+
+.arrow-icon::before {
+  content: "";
+  display: block;
+  width: 0;
+  height: 0;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-bottom: 30px solid var(--arrow-color);
+  margin: 0 auto;
+}
+
+.arrow-icon::after {
+  content: "";
+  display: block;
+  width: 6px;
+  height: 25px;
+  background-color: var(--arrow-color);
+  margin: 0 auto;
+  margin-top: -5px;
+}
+
+@keyframes dash {
+  0% {
+    stroke-dashoffset: 380;
+  }
+  50% {
+    stroke-dashoffset: 150;
+  }
+  100% {
+    stroke-dashoffset: 380;
+  }
+}
+
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* UploadAnimation.module.css */
+
+.uploading {
+  position: relative;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.uploading::before {
+  content: "";
+  position: absolute;
+  top: -25%;
+  left: -25%;
+  width: 150%;
+  height: 150%;
+  z-index: -1;
+  filter: blur(25px);
+  background: conic-gradient(
+    #4b82d4,
+    #6a29e9,
+    #4b82d4,
+    #6a29e9,
+    #c58357,
+    #ffc940,
+    #4b82d4
+  );
+  animation: rgb-spin 5s linear infinite;
+  opacity: 0.6;
+}
+
+@keyframes rgb-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* UploadShadow.module.css */
+/* UploadAnimation.module.css */
+.shadow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  border-radius: 8px;
+  filter: blur(25px);
+  z-index: 0;
+  opacity: 1;
+  overflow: hidden;
+}
+
+.shadow::before {
+  content: '';
+  position: absolute;
+  top: -25%;
+  left: -25%;
+  height: 150%;
+  width: 150%;
+  background: conic-gradient(
+    #4b82d4,
+    #6a29e9,
+    #4b82d4,
+    #6a29e9,
+    #c58357,
+    #ffc940,
+    #4b82d4
+  );
+  animation: shadow-animate 5s linear infinite;
+}
+
+@keyframes shadow-animate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
