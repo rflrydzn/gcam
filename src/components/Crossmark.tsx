@@ -1,5 +1,5 @@
 "use client";
-import styles from "./CrossMark.module.css";
+import styles from "./Crossmark.module.css";
 import { useState } from "react";
 
 export default function CrossMark() {
@@ -15,6 +15,7 @@ export default function CrossMark() {
           <div className={styles.iconCircle}></div>
         </div>
       </div>
+      <p>Transaction rejected</p>
     </div>
   );
 }
