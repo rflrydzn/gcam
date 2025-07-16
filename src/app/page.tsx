@@ -18,6 +18,8 @@ import ReceiptIcon from "../../public/receipt.png"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleUser } from "@fortawesome/free-solid-svg-icons";
 import TransactionCard from "@/components/TransactionCard";
+import SignInModal from "@/components/SignInModal";
+import { useAuth } from "@/hooks/useAuth";
 
 type Transaction = {
   id: string;
@@ -33,9 +35,10 @@ export default function Home() {
   const { data: transactions = [] } = useTransactions();
   // const [file, setFile] = useState<File | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
-  const [selectedTransaction, setSelectedTransaction] =
-    useState<Transaction | null>(null);
+  const [selectedTransaction, setSelectedTransaction] =useState<Transaction | null>(null);
   const [showTransactionHistory, setShowTransactionHistory] = useState(false);
+  const {user, loading} = useAuth();
+
 
   const getPriorityScore = (transaction: Transaction) => {
   if (transaction.isRequested && !transaction.hasDisplayed && transaction.status !== "rejected") return 100;
@@ -120,88 +123,25 @@ const [latestTransaction, ] = sortedScored;
       )}
     <div className="bg-[#FFFFFF] mx-5 ">
       
-      {/* <header className=" bg-slate-800 text-white text-center py-4">
-        <h1 className="text-3xl font-bold">GCam</h1>
-      </header> */}
-      
-      <div className="flex items-center my-3">
-        <FontAwesomeIcon icon={faCircleUser} size="3x"/>
-        <h1 className="text-2xl m-3">Hi, Admin Roy!</h1>
+      <div className="flex justify-between my-7">
+        <div className="flex">
+          <FontAwesomeIcon icon={faCircleUser} size="3x"/>
+        <h1 className="text-2xl m-3">{user ? (
+        <p>Welcome, Roy</p>
+      ) : (
+        <p className="text-sm">You are not logged in.</p>
+      )}</h1>
+        </div>
+        
+       
+
+      <SignInModal  />
       </div>
       
-
-      {/* <div
-        {...swipeHandlers}
-        className="relative flex flex-col bg-white text-gray-700 shadow-md w-full overflow-hidden rounded-xl transition-transform duration-300"
-      > */}
-        {/* {latestTransaction ? (
-          <div className="border border-gray-300 rounded-lg shadow-md m-2 p-3 bg-white space-y-0.5">
-            <span
-              className={
-                "inline-block uppercase p-1 " +
-                (latestTransaction.status === "pending"
-                  ? "bg-[#ffee99]"
-                  : latestTransaction.status === "completed"
-                  ? "bg-[#e5f9ef]"
-                  : "bg-[#FF9800]")
-              }
-            >
-              {latestTransaction.status}
-            </span>
-
-            <p className="text-[#666666] block">{formatted}</p>
-            <img src={latestTransaction.imageUrl} className="rounded-lg" alt="transaction image"/>
-
-            <Button transactionID={latestTransaction.id} />
-          </div>
-        ) : (
-          <p>loading</p>
-        )} */}
-
-        {/* {latestTransaction ? (
-          <>
-            <div className="relative">
-              <img
-                src={latestTransaction.imageUrl}
-                alt="transaction"
-                className="h-80 w-full object-cover"
-              />
-              <div className="absolute left-6 -bottom-5 py-3 p-6 bg-white/80 shadow-none shadow-black/5 saturate-200 backdrop-blur-sm rounded-full border-gray-300 border">
-                <p className="block text-sm font-medium -mt-1 text-gray-600">
-                  {latestTransaction.status}
-                </p>
-              </div>
-            </div>
-
-            <div className="p-6 pt-12 flex items-start justify-between">
-              <div className="w-48 max-w-full">
-                <div className="flex items-center gap-1">
-                  <img src={CashinIcon.src} className="w-8 h-8" alt="cashin" />
-                  <h4 className="text-[1rem] font-semibold tracking-normal text-gray-900">
-                    Cash-In
-                  </h4>
-                </div>
-                <p className="text-sm font-medium text-gray-500 mt-1">Type</p>
-              </div>
-
-              <div className="text-right w-full">
-                <p className="text-sm font-bold text-gray-600">{formatted}</p>
-                <p className="text-xs text-slate-500 italic mt-1">
-                  (Swipe left to accept, right to reject)
-                </p>
-              </div>
-            </div>
-          </>
-        ) : (
-          <div className="p-6 text-center text-gray-400">Loading...</div>
-        )}
-      </div> */}
       {latestTransaction ? (
         <TransactionCard transaction={latestTransaction} timeAgo={timeAgo}/>
       ) : (<p>Loading...</p>)}
 
-      
-      
       <div>
         <div className="relative flex flex-col my-9 w-full ">
           <div className="">
