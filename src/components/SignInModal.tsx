@@ -1,11 +1,12 @@
 "use client";
 import { useState } from "react";
-import { signInWithEmailAndPassword, signOut, setPersistence, browserLocalPersistence, browserSessionPersistence} from "firebase/auth";
+import { signInWithEmailAndPassword, setPersistence, browserLocalPersistence, browserSessionPersistence} from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { useAuth } from "@/hooks/useAuth";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGear } from "@fortawesome/free-solid-svg-icons";
 import GearDropdown from "./GearDropdown";
+import PulseLoader from "./PulseLoader";
+import { useAtomValue, useSetAtom } from "jotai";
+import { globalLoadingAtom } from "@/lib/atoms";
 
 export default function SignInModal() {
   const [isOpen, setIsOpen] = useState(false);
@@ -13,8 +14,14 @@ export default function SignInModal() {
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false)
   const { user } = useAuth();
+const setGlobalLoading = useSetAtom(globalLoadingAtom);
+const isGlobalLoading = useAtomValue(globalLoadingAtom)
+const isLoading = useAtomValue(globalLoadingAtom);
 
   const handleSignIn = async () => {
+
+    setGlobalLoading(true);
+    
     try {
         await setPersistence(
       auth,
@@ -25,17 +32,21 @@ export default function SignInModal() {
     } catch (err) {
       alert("Login failed.");
       console.error(err);
+    } finally {
+
+        setTimeout(() => {
+            setGlobalLoading(false)
+        }, 2000)
     }
   };
 
-  const handleSignOut = async () => {
-    await signOut(auth);
-  };
 
   return (
     <>
+          {isGlobalLoading && <PulseLoader />} {/* 👈 Show loader when loading */}
+
       {/* Button */}
-      {!user ? (
+      {!user && !isLoading ? (
         <button
           className="px-6 py-3  border-[#1A1A1A] border rounded-3xl text-[14px] leading-4"
           onClick={() => setIsOpen(true)}
@@ -46,7 +57,7 @@ export default function SignInModal() {
         <GearDropdown />
         
       )}
-
+    
       {/* Modal */}
       {isOpen && (
         <div className="fixed inset-0 bg-white bg-opacity-50 flex items-center justify-center z-50  ">

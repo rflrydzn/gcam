@@ -3,14 +3,25 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGear, faUser, faMoon, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
+import { globalLoadingAtom } from "@/lib/atoms";
+import { useSetAtom } from "jotai";
 
 export default function GearDropdown() {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const setIsGlobalLoading = useSetAtom(globalLoadingAtom)
 
   const handleSignOut = async () => {
+  setIsGlobalLoading(true);
+  try {
     await signOut(auth);
-  };
+
+    // 👇 Artificial delay so loader is visible
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+  } finally {
+    setIsGlobalLoading(false);
+  }
+};
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -28,6 +39,8 @@ export default function GearDropdown() {
 
   return (
     <div className="relative inline-block text-left" ref={dropdownRef}>
+
+      
       <button
         onClick={() => setOpen(!open)}
         className="p-2 rounded-full hover:bg-gray-200 transition"

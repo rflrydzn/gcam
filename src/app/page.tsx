@@ -20,6 +20,8 @@ import { faCircleUser } from "@fortawesome/free-solid-svg-icons";
 import TransactionCard from "@/components/TransactionCard";
 import SignInModal from "@/components/SignInModal";
 import { useAuth } from "@/hooks/useAuth";
+import { useAtomValue } from "jotai";
+import { globalLoadingAtom } from "@/lib/atoms";
 
 type Transaction = {
   id: string;
@@ -37,7 +39,8 @@ export default function Home() {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedTransaction, setSelectedTransaction] =useState<Transaction | null>(null);
   const [showTransactionHistory, setShowTransactionHistory] = useState(false);
-  const {user, loading} = useAuth();
+  const {user} = useAuth();
+  const isLoading = useAtomValue(globalLoadingAtom)
 
 
   const getPriorityScore = (transaction: Transaction) => {
@@ -62,7 +65,6 @@ const [latestTransaction, ] = sortedScored;
     [scored]
   
   );
-  useEffect(()=> console.log("history", unscored), [])
 
   // let formatted = "";
   // if (latestTransaction && latestTransaction.timestamp) {
@@ -111,6 +113,7 @@ const [latestTransaction, ] = sortedScored;
     setShowTransactionHistory(true);
     window.scrollTo({ top: 0, behavior: "instant" });
   };
+  
   return (
     <div>
       {showTransactionHistory && (
@@ -128,9 +131,9 @@ const [latestTransaction, ] = sortedScored;
           <FontAwesomeIcon icon={faCircleUser} size="3x"/>
         <h1 className="text-2xl m-3">{user ? (
         <p>Welcome, Roy</p>
-      ) : (
+      ) : !isLoading ? (
         <p className="text-sm">Login to view data.</p>
-      )}</h1>
+      ) : <p>Welcome, Roy</p> }</h1>
         </div>
         
        
