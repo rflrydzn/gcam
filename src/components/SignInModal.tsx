@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { signInWithEmailAndPassword, signOut, setPersistence, browserLocalPersistence, browserSessionPersistence} from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { useAuth } from "@/hooks/useAuth";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -11,10 +11,15 @@ export default function SignInModal() {
   const [isOpen, setIsOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false)
   const { user } = useAuth();
 
   const handleSignIn = async () => {
     try {
+        await setPersistence(
+      auth,
+      rememberMe ? browserLocalPersistence : browserSessionPersistence
+    );
       await signInWithEmailAndPassword(auth, email, password);
       setIsOpen(false);
     } catch (err) {
@@ -44,37 +49,54 @@ export default function SignInModal() {
 
       {/* Modal */}
       {isOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg w-full max-w-sm">
-            <h2 className="text-lg font-bold mb-4">Sign In</h2>
+        <div className="fixed inset-0 bg-white bg-opacity-50 flex items-center justify-center z-50  ">
+          <div className="bg-white rounded-lg w-full p-6 space-y-6 h-[500px]">
+            <h2 className="text-2xl font-bold ">Log In</h2>
+            <div className="">
+                <label className="mb-2.5 block">Email</label>
             <input
               type="email"
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full mb-2 px-3 py-2 border rounded"
+              className="w-full mb-2 px-3 py-2 border rounded-4xl border-[#B3B3B3]"
             />
+            </div>
+            <div>
+                <label className="mb-2.5 block">Password</label>
             <input
               type="password"
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full mb-4 px-3 py-2 border rounded"
+              className="w-full mb-4 px-3 py-2 border rounded-4xl border-[#B3B3B3]"
             />
+            </div>
+            <label className="flex items-center space-x-2 text-sm">
+  <input
+    type="checkbox"
+    checked={rememberMe}
+    onChange={() => setRememberMe(!rememberMe)}
+    className="form-checkbox"
+  />
+  <span>Remember me</span>
+</label>
             <div className="flex justify-between">
               <button
                 onClick={handleSignIn}
-                className="px-6 py-3 bg-[#1A1A1A] text-white rounded-3xl text-[14px] leading-4"
+                className="px-6 py-3 bg-[#1A1A1A] text-white rounded-md text-[14px] leading-4 w-full"
               >
                 Log In
               </button>
-              <button
+              {/* <button
                 onClick={() => setIsOpen(false)}
                 className="px-6 py-3 bg-[#1A1A1A] text-white rounded-3xl text-[14px] leading-4"
               >
                 Cancel
-              </button>
+              </button> */}
             </div>
+
+            
           </div>
         </div>
       )}

@@ -129,7 +129,7 @@ const [latestTransaction, ] = sortedScored;
         <h1 className="text-2xl m-3">{user ? (
         <p>Welcome, Roy</p>
       ) : (
-        <p className="text-sm">You are not logged in.</p>
+        <p className="text-sm">Login to view data.</p>
       )}</h1>
         </div>
         
