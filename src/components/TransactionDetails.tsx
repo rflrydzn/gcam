@@ -4,7 +4,6 @@ import { useAuth } from "@/hooks/useAuth";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
-import Image from "next/image";
 
 interface ModalProps {
   isOpen: boolean;
