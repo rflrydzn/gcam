@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  images: {
+    domains: ['rddizon.pythonanywhere.com', 'pythonanywhere.com'],
+  },
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/,
