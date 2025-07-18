@@ -5,6 +5,8 @@ import { faImage } from "@fortawesome/free-solid-svg-icons";
 
 export default function ImageModal({img}: {img: string}) {
   const [isOpen, setIsOpen] = useState(false);
+  const [hasOpened, setHasOpened] = useState(false);
+
   const [imgSrc, ] = useState(img); // replace with your image
   const [caption, setCaption] = useState("09xx xxx xxxx");
   const [, setOrigin] = useState({ top: 0, left: 0 });
@@ -18,6 +20,8 @@ export default function ImageModal({img}: {img: string}) {
       setOrigin({ top: rect.top, left: rect.left });
     }
     setIsOpen(true);
+    setHasOpened(true); // Hide the ping forever after first open
+
     setCaption("09xx xxx xxxx"); // Or dynamically set caption
   };
 
@@ -33,7 +37,17 @@ export default function ImageModal({img}: {img: string}) {
         onClick={openModal}
         className="cursor-pointer  hover:text-black flex items-center space-x-2"
       >
-        <FontAwesomeIcon icon={faImage} size="2x" />
+       <div className="relative">
+    <FontAwesomeIcon icon={faImage} size="2x" />
+
+    {/* Ping indicator */}
+    {!hasOpened && (
+      <span className="absolute -top-[-0.05px] -right-1 flex size-2">
+        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gray-600 opacity-75"></span>
+        <span className="relative inline-flex size-2 rounded-full bg-gray-300"></span>
+      </span>
+    )}
+  </div>
         <span className="text-sm">Open Image</span>
       </div>
 
