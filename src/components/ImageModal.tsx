@@ -2,19 +2,29 @@
 import { useState, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faImage } from "@fortawesome/free-solid-svg-icons";
+import { useAuth } from "@/hooks/useAuth";
 
-export default function ImageModal({img}: {img: string}) {
+export default function ImageModal({
+  img,
+  onUnauthorized,
+}: {
+  img: string;
+  onUnauthorized: () => void;
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const [hasOpened, setHasOpened] = useState(false);
 
-  const [imgSrc, ] = useState(img); // replace with your image
+  const [imgSrc] = useState(img); // replace with your image
   const [caption, setCaption] = useState("09xx xxx xxxx");
   const [, setOrigin] = useState({ top: 0, left: 0 });
   const triggerRef = useRef<HTMLDivElement>(null);
-
-
+  const { user } = useAuth();
 
   const openModal = () => {
+    if (!user) {
+      onUnauthorized?.();
+      return;
+    }
     if (triggerRef.current) {
       const rect = triggerRef.current.getBoundingClientRect();
       setOrigin({ top: rect.top, left: rect.left });
@@ -37,23 +47,26 @@ export default function ImageModal({img}: {img: string}) {
         onClick={openModal}
         className="cursor-pointer  hover:text-black flex items-center space-x-2"
       >
-       <div className="relative">
-    <FontAwesomeIcon icon={faImage} size="2x" />
+        <div className="relative">
+          <FontAwesomeIcon icon={faImage} size="2x" />
 
-    {/* Ping indicator */}
-    {!hasOpened && (
-      <span className="absolute -top-[-0.05px] -right-1 flex size-2">
-        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gray-600 opacity-75"></span>
-        <span className="relative inline-flex size-2 rounded-full bg-gray-300"></span>
-      </span>
-    )}
-  </div>
+          {/* Ping indicator */}
+          {!hasOpened && (
+            <span className="absolute -top-[-0.05px] -right-1 flex size-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gray-600 opacity-75"></span>
+              <span className="relative inline-flex size-2 rounded-full bg-gray-300"></span>
+            </span>
+          )}
+        </div>
         <span className="text-sm">Open Image</span>
       </div>
 
       {/* Modal */}
       {isOpen && (
-        <div className="fixed z-50 inset-0 bg-black/80 flex items-center justify-center" onClick={closeModal}>
+        <div
+          className="fixed z-50 inset-0 bg-black/80 flex items-center justify-center"
+          onClick={closeModal}
+        >
           <div className="relative" onClick={(e) => e.stopPropagation()}>
             <span
               className="absolute top-2 right-4 text-white text-4xl font-bold cursor-pointer hover:text-gray-400"

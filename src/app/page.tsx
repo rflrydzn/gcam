@@ -130,10 +130,10 @@ const [latestTransaction, ] = sortedScored;
         <div className="flex">
           <FontAwesomeIcon icon={faCircleUser} size="3x"/>
         <h1 className="text-2xl m-3">{user ? (
-        <p>Welcome, Roy</p>
+        <p>Welcome back, Roy</p>
       ) : !isLoading ? (
-        <p className="text-sm">Login to view data.</p>
-      ) : <p>Welcome, Roy</p> }</h1>
+        <p className="text-sm">Guest mode. Please log in.</p>
+      ) : <p>Welcome back, Roy</p> }</h1>
         </div>
         
        
