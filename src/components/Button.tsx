@@ -75,9 +75,11 @@ const Button = ({ transactionID, onAccept, onReject }: ButtonProps ) => {
       >
         Reject
       </button>
-      <label className="px-6 py-3 bg-[#1A1A1A] text-white rounded-3xl text-[14px] leading-4">
-
-        <FontAwesomeIcon icon={faCloudArrowUp}/> Upload
+      <label className="px-6 py-3 bg-[#1A1A1A] text-white rounded-3xl text-[14px] leading-4 ">
+        <div className="flex">
+          <FontAwesomeIcon icon={faCloudArrowUp} /> 
+          <p className="hidden [@media(min-width:378px)]:inline">Upload</p>
+        </div>
         <input type="file" className="hidden" onChange={handleChange(transactionID)} />
       </label>
     </div>
