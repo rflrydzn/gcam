@@ -22,7 +22,7 @@ import SignInModal from "@/components/SignInModal";
 import { useAuth } from "@/hooks/useAuth";
 import { useAtomValue } from "jotai";
 import { globalLoadingAtom } from "@/lib/atoms";
-
+import { faGears } from "@fortawesome/free-solid-svg-icons";
 type Transaction = {
   id: string;
   status: string;
@@ -115,7 +115,9 @@ const [latestTransaction, ] = sortedScored;
   };
   
   return (
-    <div>
+    <>
+    <div className="block sm:hidden">
+      
       {showTransactionHistory && (
         <div className="absolute">
           <TransactionHistory
@@ -239,6 +241,13 @@ const [latestTransaction, ] = sortedScored;
         </div>
       </div>
     </div>
+    
     </div>
+    <div className="hidden sm:flex  flex-col fixed inset-0 z-50 items-center justify-center bg-white text-black text-xl font-semibold w-full">
+            <FontAwesomeIcon icon={faGears} size="10x"/>
+        <p className="w-1/  text-center m-4">Paki view sa cp lods, in progress pa ang app ni baroroy</p>
+      </div>
+      </>
+
   );
 }
