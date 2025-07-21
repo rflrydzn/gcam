@@ -7,7 +7,7 @@ import {
   browserSessionPersistence,
 } from "firebase/auth";
 import { auth } from "@/lib/firebase";
-import { useAuth } from "@/hooks/useAuth";
+// import { useAuth } from "@/hooks/useAuth";
 import GearDropdown from "./GearDropdown";
 import PulseLoader from "./PulseLoader";
 import { useAtomValue, useSetAtom } from "jotai";
