@@ -48,7 +48,7 @@ export default function ImageModal({
         className="cursor-pointer  hover:text-black flex items-center space-x-2"
       >
         <div className="relative">
-          <FontAwesomeIcon icon={faImage} size="2x" />
+          <FontAwesomeIcon icon={faImage} size="2x" className="dark:text-white" />
 
           {/* Ping indicator */}
           {!hasOpened && (
@@ -58,7 +58,7 @@ export default function ImageModal({
             </span>
           )}
         </div>
-        <span className="text-sm">Open Image</span>
+        <span className="text-sm dark:text-white">Open Image</span>
       </div>
 
       {/* Modal */}

@@ -90,53 +90,61 @@ export default function TransactionCard({
     }
   };
 
+  const renderOverlayContent = () => {
+  switch (action) {
+    case "accepted":
+      return <CheckMark />;
+    case "rejected":
+      return <CrossMark />;
+    case "ocr":
+      return (
+        <div className="flex flex-col items-center">
+          <img
+            src="https://static.wikia.nocookie.net/logopedia/images/d/d2/Gemini_2024_animated.gif"
+            width={100}
+          />
+          <p>Processing...</p>
+        </div>
+      );
+    case "anonymous":
+      return (
+        <div
+          className="flex flex-col items-center h-full justify-center"
+          onClick={() => setAction(null)}
+        >
+          <FontAwesomeIcon icon={fontawesomeIcon} size="4x" />
+          <p className="p-2">Please login.</p>
+        </div>
+      );
+    default:
+      return null;
+  }
+};
+
+
+
   return (
     <div className="relative">
-      {action === "accepted" && (
-        <div className="absolute inset-0 bg-white bg-opacity-80 backdrop-blur-sm flex items-center justify-center z-10">
-          <CheckMark />
-        </div>
-      )}
-      {action === "rejected" && (
-        <div className="absolute inset-0 bg-white bg-opacity-80 backdrop-blur-sm flex items-center justify-center z-10">
-          <CrossMark />
-        </div>
-      )}
-
-      {action === "ocr" && (
-        <div className="absolute inset-0 bg-white/80  backdrop-blur-sm flex items-center justify-center z-10">
-          <div>
-            <img
-              src="https://static.wikia.nocookie.net/logopedia/images/d/d2/Gemini_2024_animated.gif"
-              width={100}
-            />
-            <p>Processing...</p>
-          </div>
-        </div>
-      )}
-
-      {action === "anonymous" && (
-        <div className="absolute inset-0 bg-white/80 backdrop-blur-sm flex items-center justify-center z-10" onClick={() => setAction(null)}>
-          <div className="items-center justify-center flex h-full flex-col">
-            <FontAwesomeIcon icon={fontawesomeIcon} size="4x" />
-            <p className="p-2">Please login.</p>
-          </div>
-        </div>
-      )}
+      {action && (
+      <div className="absolute inset-0 bg-white/100 backdrop-blur-sm flex items-center justify-center z-10 dark:bg-primary-dark/80">
+        {renderOverlayContent()}
+      </div>
+    )}
+      
       <div
         className={`${styles.shadow} absolute top-0 left-0 w-full h-full rounded-[8px]`}
       ></div>
 
-      <div className="relative border w-full h-[212px] rounded-[8px] px-5 py-6 flex flex-col gap-[1px] bg-white">
+      <div className="relative border w-full h-[212px] rounded-[8px] px-5 py-6 flex flex-col gap-[1px] bg-white dark:bg-primary-dark">
         <div className="flex justify-between">
           <div>
-            <h1 className="text-xl leading-6">
+            <h1 className="text-xl leading-6 dark:text-white">
               {!ocrData.isTransaction
                 ? "Not a transaction."
                 : `${ocrData.number} - ₱${ocrData.amount}`}
             </h1>
-            <h1>{ocrData.isTransaction && ocrData.accountName}</h1>
-            <span className="text-[14px] leading-6">
+            <h1 className="dark:text-white">{ocrData.isTransaction && ocrData.accountName}</h1>
+            <span className="text-[14px] leading-6 dark:text-white">
               {ocrData.isTransaction && "Cash-In"}
             </span>
           </div>
@@ -146,10 +154,10 @@ export default function TransactionCard({
               <CopyButton value={ocrData.number} />
             ) : ocrData.isTransaction ? (
               <button
-                className="border rounded-2xl px-3 py-1 flex items-center gap-1 text-sm"
+                className="border border-black rounded-2xl px-3 py-1 flex items-center gap-1 text-sm dark:border-white"
                 onClick={() => handleOCR(transaction.imageUrl)}
               >
-                OCR <GeminiIcon />
+                <span className="flex text-black justify-center items-center gap-1 dark:text-white">OCR <GeminiIcon /></span>
               </button>
             ) : null}
           </div>
@@ -168,7 +176,7 @@ export default function TransactionCard({
           onUnauthorized={() => handleUnauthorized(faLock)}
         />
         {/* <p>{transaction.id}</p> */}
-        <span>{timeAgo(transaction.timestamp)}</span>
+        <span className="dark:text-white">{timeAgo(transaction.timestamp)}</span>
       </div>
     </div>
   );

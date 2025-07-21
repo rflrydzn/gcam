@@ -37,26 +37,26 @@ const TransactionDetails = ({ data, isOpen, onClose }: ModalProps) => {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-white/10 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-white/10 backdrop-blur-sm "
       onClick={onClose}
     >
       <div
-        className={`bg-white p-6 rounded-lg w-[90%] max-w-md relative border min-h-[300px] flex items-center justify-center transition-all duration-300 transform ${
+        className={`bg-white dark:bg-primary-dark p-6 rounded-lg w-[90%] max-w-md relative border min-h-[300px] flex items-center justify-center transition-all duration-300 transform ${
           showContent ? "opacity-100 scale-100" : "opacity-0 scale-95"
         }`}
         onClick={(e) => e.stopPropagation()}
       >
         {!user ? (
           <div className="items-center justify-center flex h-full flex-col">
-            <FontAwesomeIcon icon={faEyeSlash} size="4x" />
-            <p>Please login.</p>
+            <FontAwesomeIcon icon={faEyeSlash} size="4x" className="dark:text-white"/>
+            <p className="dark:text-white">Please login.</p>
           </div>
         ) : (
           <div>
-            <h1 className="text-xl font-bold mb-4">Status: {data.status}</h1>
-            <p className="mb-2 text-gray-600">Timestamp: {data.timestamp}</p>
-            <p>id: {data.id}</p>
-            <div className="w-full h-56 mb-4 rounded-lg overflow-hidden bg-gray-100 ">
+            <h1 className="text-xl font-bold mb-4 dark:text-white">Status: {data.status}</h1>
+            <p className="mb-2 text-gray-600 dark:text-white">Timestamp: {data.timestamp}</p>
+            <p className="dark:text-white">id: {data.id}</p>
+            <div className="w-full h-56 mb-4 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-600">
               <img
                 src={data.imageUrl}
                 alt="Transaction"

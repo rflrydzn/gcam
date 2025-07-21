@@ -30,9 +30,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" >
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${balsamiq.className} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${balsamiq.className} antialiased dark:bg-primary-dark`}
       >
         <QueryProvider>
           {children}

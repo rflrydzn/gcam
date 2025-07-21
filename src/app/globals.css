@@ -1,5 +1,23 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 h1 {
   font-family: 'Balsamiq Sans', cursive;
+}
+
+@theme {
+  --color-primary-dark: #1d293d;
+}
+
+:root {
+  --checkmark-border: #1d2a3d;
+  --checkmark-fill: #fff;
+  --checkmark-circle: rgba(29, 42, 61, 0.5);
+}
+
+.dark {
+  --checkmark-border: #ffffff;
+  --checkmark-fill: #1d2a3d;
+  --checkmark-circle: rgba(255, 255, 255, 0.3);
 }

@@ -10,7 +10,7 @@
   position: relative;
   border-radius: 50%;
   box-sizing: content-box;
-  border: 6px solid #1d2a3d;
+  border: 6px solid var(--checkmark-border);
 }
 
 .checkIcon::before,
@@ -18,7 +18,8 @@
   content: "";
   height: 100px;
   position: absolute;
-  background: #ffffff;
+  background: var(--checkmark-fill);
+  
   transform: rotate(-45deg);
 }
 
@@ -41,7 +42,7 @@
 
 .iconLine {
   height: 8px;
-  background-color: #1d2a3d;
+  background-color: var(--checkmark-border);
   display: block;
   border-radius: 2px;
   position: absolute;
@@ -73,7 +74,7 @@
   border-radius: 50%;
   position: absolute;
   box-sizing: content-box;
-  border: 6px solid rgba(29, 42, 61, 0.5);
+  border: 6px solid var(--checkmark-circle);
 }
 
 .iconFix {
@@ -84,7 +85,7 @@
   height: 85px;
   position: absolute;
   transform: rotate(-45deg);
-  background-color: #ffffff;
+  background-color: var(--checkmark-fill);
 }
 
 @keyframes rotate-circle {

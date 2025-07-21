@@ -47,16 +47,9 @@ export default function SignInModal() {
     <>
       {isGlobalLoading && <PulseLoader />} {/* 👈 Show loader when loading */}
       {/* Button */}
-      {!user && !isLoading ? (
-        <button
-          className="px-6 py-3  border-[#1A1A1A] border rounded-3xl text-[14px] leading-4"
-          onClick={() => setIsOpen(true)}
-        >
-          Sign In
-        </button>
-      ) : (
-        <GearDropdown />
-      )}
+      
+        <GearDropdown openSignIn={() => setIsOpen(true)}/>
+      
       {/* Modal */}
       {isOpen && (
         <div className="fixed inset-0 bg-white bg-opacity-50 flex items-center justify-center z-50  ">

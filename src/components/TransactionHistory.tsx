@@ -32,13 +32,13 @@ const TransactionHistory = ({ data, onClose }: TransactionProps) => {
 
   return (
     <div>
-      <div className=" flex flex-col  bg-white   rounded-lg w-screen absolute z-50  overflow-y-auto">
+      <div className=" flex flex-col  bg-white   rounded-lg w-screen absolute z-50  overflow-y-auto dark:bg-primary-dark">
         <div className="p-4">
           <div className="mb-4 flex items-center justify-between">
-            <button onClick={onClose}>
+            <button onClick={onClose} >
               <BackIcon />
             </button>
-            <h5 className="flex-1 text-center text-slate-800 text-lg font-semibold">
+            <h5 className="flex-1 text-center text-slate-800 text-lg font-semibold dark:text-white">
               Transaction History
             </h5>
             {/* Empty element to balance the layout */}
@@ -59,13 +59,13 @@ const TransactionHistory = ({ data, onClose }: TransactionProps) => {
                     className="relative inline-block h-8 w-8 rounded-full object-cover object-center"
                   />
                   <div>
-                    <h6 className="text-slate-800 font-semibold">
+                    <h6 className="text-slate-800 font-semibold dark:text-white">
                       {tx.status}
                     </h6>
-                    <p className="text-slate-600 text-sm">maria@gmail.com</p>
+                    <p className="text-slate-600 text-sm dark:text-white">maria@gmail.com</p>
                   </div>
                 </div>
-                <h6 className="text-slate-600 font-medium">{tx.timestamp}</h6>
+                <h6 className="text-slate-600 font-medium dark:text-white">{tx.timestamp}</h6>
               </div>
             ))}
             <TransactionDetails
