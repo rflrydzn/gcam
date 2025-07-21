@@ -58,7 +58,7 @@ export default function ImageModal({
             </span>
           )}
         </div>
-        <span className="text-sm dark:text-white">Open Image</span>
+        <span className="text-sm text-gray-500 dark:text-gray-400">Open Image</span>
       </div>
 
       {/* Modal */}

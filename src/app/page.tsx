@@ -186,13 +186,13 @@ export default function Home() {
                           <h6 className="text-slate-800 font-semibold dark:text-white">
                             {tx.isRequested ? "Requesting receipt" : "Cash-In"}
                           </h6>
-                          <p className="text-slate-600 text-sm dark:text-white">
+                          <p className="text-slate-500 text-sm dark:text-gray-400">
                             {timeAgo(tx.timestamp)}
                           </p>
                         </div>
                       </div>
                       <button className="px-5 py-2.5 bg-[#1A1A1A] text-white rounded-3xl text-[14px] leading-4">
-                        OPEN
+                        DETAILS
                       </button>
                     </div>
                   ))}
@@ -235,10 +235,10 @@ export default function Home() {
                           <h6 className="text-slate-800 font-semibold dark:text-white">
                             {tx.status}
                           </h6>
-                          <p className="text-slate-600 text-sm dark:text-white">Cash-In</p>
+                          <p className="text-slate-500 text-sm dark:text-slate-400">Cash-In</p>
                         </div>
                       </div>
-                      <h6 className="text-slate-600 font-medium dark:text-white">
+                      <h6 className="text-slate-500 font-medium dark:text-slate-400">
                         {timeAgo(tx.timestamp)}
                       </h6>
                     </div>

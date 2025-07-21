@@ -176,7 +176,7 @@ export default function TransactionCard({
           onUnauthorized={() => handleUnauthorized(faLock)}
         />
         {/* <p>{transaction.id}</p> */}
-        <span className="dark:text-white">{timeAgo(transaction.timestamp)}</span>
+        <span className="text-gray-500 dark:text-gray-400">{timeAgo(transaction.timestamp)}</span>
       </div>
     </div>
   );
