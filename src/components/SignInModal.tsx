@@ -18,10 +18,10 @@ export default function SignInModal() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
-  const { user } = useAuth();
+  // const { user } = useAuth();
   const setGlobalLoading = useSetAtom(globalLoadingAtom);
   const isGlobalLoading = useAtomValue(globalLoadingAtom);
-  const isLoading = useAtomValue(globalLoadingAtom);
+  // const isLoading = useAtomValue(globalLoadingAtom);
 
   const handleSignIn = async () => {
     setGlobalLoading(true);
