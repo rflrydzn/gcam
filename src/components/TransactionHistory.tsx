@@ -5,6 +5,8 @@ import { useState } from "react";
 import TransactionDetails from "./TransactionDetails";
 import CashinIcon from "../../public/cashin2.png";
 import BackIcon from "../../public/BackIcon.svg";
+import WhiteBackIcon from '../../public/white.svg'
+
 interface Transaction {
   id: string;
   status: string;
@@ -36,7 +38,8 @@ const TransactionHistory = ({ data, onClose }: TransactionProps) => {
         <div className="p-4">
           <div className="mb-4 flex items-center justify-between">
             <button onClick={onClose} >
-              <BackIcon />
+              <BackIcon className='block dark:hidden'/>
+              <WhiteBackIcon className='hidden dark:block'/>
             </button>
             <h5 className="flex-1 text-center text-slate-800 text-lg font-semibold dark:text-white">
               Transaction History

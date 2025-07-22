@@ -66,8 +66,8 @@ export default function SignInModal() {
       {/* Modal */}
       {isOpen && (
         <div className="fixed inset-0 bg-white bg-opacity-50 flex items-center justify-center z-50 dark:bg-primary-dark ">
-          <div className="bg-white rounded-lg w-full p-6 space-y-6 h-[500px] dark:bg-primary-dark">
-            <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="bg-white rounded-lg w-full p-6 space-y-6 h-[500px] dark:bg-primary-dark spa">
+            <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
             <h2 className="text-2xl font-bold dark:text-white">Log In</h2>
             <div className="">
               <label className="mb-2.5 block dark:text-white">Email</label>
@@ -83,7 +83,7 @@ export default function SignInModal() {
                 })}
                 className="w-full mb-2 px-3 py-2 border rounded-4xl border-[#B3B3B3] dark:text-white"
               />
-              {errors.email && (<p className="text-red-500 text-sm">{errors.email.message}</p>)}
+              {errors.email && (<p className="text-red-500 text-sm dark:text-red-300">{errors.email.message}</p>)}
             </div>
             <div>
               <label className="mb-2.5 block dark:text-white">Password</label>
@@ -99,7 +99,7 @@ export default function SignInModal() {
                 })}
                 className="w-full mb-4 px-3 py-2 border rounded-4xl border-[#B3B3B3] dark:text-white"
               />
-              {errors.password && (<p className="text-red-500 text-sm">{errors.password.message}</p>)}
+              {errors.password && (<p className="text-red-500 text-sm dark:text-red-300">{errors.password.message}</p>)}
             </div>
             <label className="flex items-center space-x-2 text-sm">
               <input
@@ -121,8 +121,8 @@ export default function SignInModal() {
               </button>
               
             </div>
-                {errorMsg}
-            <p onClick={() => setIsOpen(false)} className="text-center text-sm text-gray-600 cursor-pointer hover:underline dark:text-white">
+                <p className='text-red-500 dark:text-red-300'>{errorMsg}</p>
+            <p onClick={() => setIsOpen(false)} className="text-center text-sm text-gray-600 cursor-pointer hover:underline dark:text-gray-400 py-5">
               Continue viewing as a guest.
             </p>
             </form>

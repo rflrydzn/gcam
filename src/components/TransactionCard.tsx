@@ -126,7 +126,7 @@ export default function TransactionCard({
   return (
     <div className="relative">
       {action && (
-      <div className="absolute inset-0 bg-white/100 backdrop-blur-sm flex items-center justify-center z-10 dark:bg-primary-dark/80">
+      <div className="absolute inset-0 bg-white/100 backdrop-blur-sm flex items-center justify-center z-10 dark:bg-primary-dark/80 dark:text-white">
         {renderOverlayContent()}
       </div>
     )}
