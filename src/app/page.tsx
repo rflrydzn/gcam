@@ -23,7 +23,6 @@ import { useAuth } from "@/hooks/useAuth";
 import { useAtomValue } from "jotai";
 import { globalLoadingAtom } from "@/lib/atoms";
 import { faGears } from "@fortawesome/free-solid-svg-icons";
-import { useTheme } from "next-themes";
 type Transaction = {
   id: string;
   status: string;
@@ -43,7 +42,6 @@ export default function Home() {
   const [showTransactionHistory, setShowTransactionHistory] = useState(false);
   const { user } = useAuth();
   const isLoading = useAtomValue(globalLoadingAtom);
-  const {theme, setTheme} = useTheme();
   const getPriorityScore = (transaction: Transaction) => {
     if (
       transaction.isRequested &&

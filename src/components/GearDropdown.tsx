@@ -13,7 +13,6 @@ export default function GearDropdown({openSignIn} : {openSignIn: () => void}) {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const setIsGlobalLoading = useSetAtom(globalLoadingAtom)
   const {user} = useAuth();
-  const [darkMode, setDarkMode] = useState(true);
   const { theme, setTheme } = useTheme();
 
   const handleSignOut = async () => {
