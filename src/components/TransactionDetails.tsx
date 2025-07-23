@@ -41,7 +41,7 @@ const TransactionDetails = ({ data, isOpen, onClose }: ModalProps) => {
       onClick={onClose}
     >
       <div
-        className={`bg-white dark:bg-primary-dark p-6 rounded-lg w-[90%] max-w-md relative border min-h-[300px] flex items-center justify-center transition-all duration-300 transform ${
+        className={`bg-white border-black dark:bg-primary-dark p-6 rounded-lg w-[90%] max-w-md relative border min-h-[300px] flex items-center justify-center ${
           showContent ? "opacity-100 scale-100" : "opacity-0 scale-95"
         }`}
         onClick={(e) => e.stopPropagation()}

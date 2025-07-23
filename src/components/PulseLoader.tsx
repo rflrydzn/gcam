@@ -10,7 +10,7 @@ export default function PulseLoader() {
   const isLoading = useAtomValue(globalLoadingAtom);
     if (!isLoading) return null;
   
-  const bgOpacity = user ? "bg-white/100" : "bg-white/40"
+  const bgOpacity = user ? "bg-white/100 dark:bg-primary-dark/100" : "bg-white/40 dark:bg-primary-dark/40"
   
   return (
     <div className={`fixed inset-0 z-50 flex items-center justify-center  ${bgOpacity} transition-opacity duration-700 animate-fadeOut`}>
