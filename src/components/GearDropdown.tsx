@@ -6,6 +6,7 @@ import { auth } from "@/lib/firebase";
 import { globalLoadingAtom } from "@/lib/atoms";
 import { useSetAtom } from "jotai";
 import { useAuth } from "@/hooks/useAuth";
+import { useTheme } from "next-themes";
 
 export default function GearDropdown({openSignIn} : {openSignIn: () => void}) {
   const [open, setOpen] = useState(false);
@@ -13,6 +14,7 @@ export default function GearDropdown({openSignIn} : {openSignIn: () => void}) {
   const setIsGlobalLoading = useSetAtom(globalLoadingAtom)
   const {user} = useAuth();
   const [darkMode, setDarkMode] = useState(true);
+  const { theme, setTheme } = useTheme();
 
   const handleSignOut = async () => {
   setIsGlobalLoading(true);
@@ -64,11 +66,10 @@ export default function GearDropdown({openSignIn} : {openSignIn: () => void}) {
 
           {/* Theme toggle */}
           <button className="flex items-center gap-2 px-4 py-2 text-sm w-full text-left hover:bg-gray-100"
-          onClick={() => {
-                  setDarkMode(!darkMode);
-                  document.documentElement.classList.toggle("dark");
-                }}>
-            {darkMode ? (<>
+          onClick={() => 
+                  setTheme(theme === 'light' ? 'dark' : 'light')
+                }>
+            {theme === 'light' ? (<>
             <FontAwesomeIcon icon={faMoon} />
             Dark Mode</>) : (<div className="dark:text-white"><FontAwesomeIcon icon={faSun} /> Light Mode</div>)}
             

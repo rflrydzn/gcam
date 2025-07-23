@@ -135,7 +135,7 @@ export default function TransactionCard({
         className={`${styles.shadow} absolute top-0 left-0 w-full h-full rounded-[8px]`}
       ></div>
 
-      <div className="relative border w-full h-[212px] rounded-[8px] px-5 py-6 flex flex-col gap-[1px] bg-white dark:bg-primary-dark">
+      <div className="relative border border-black w-full h-[212px] rounded-[8px] px-5 py-6 flex flex-col gap-[1px] bg-white dark:bg-primary-dark ">
         <div className="flex justify-between">
           <div>
             <h1 className="text-xl leading-6 dark:text-white">

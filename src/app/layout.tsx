@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import QueryProvider from "@/components/queryProvider";
 import { Balsamiq_Sans } from 'next/font/google';
-
+import {ThemeProvider} from 'next-themes'
 const balsamiq = Balsamiq_Sans({
   subsets: ['latin'],
   weight: ['400', '700'], // Optional
@@ -30,12 +30,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" >
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${balsamiq.className} antialiased dark:bg-primary-dark`}
       >
         <QueryProvider>
-          {children}
+          <ThemeProvider attribute='class' enableSystem defaultTheme="system" >
+            {children}
+          </ThemeProvider>
         </QueryProvider>
       </body>
     </html>

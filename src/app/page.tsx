@@ -23,6 +23,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useAtomValue } from "jotai";
 import { globalLoadingAtom } from "@/lib/atoms";
 import { faGears } from "@fortawesome/free-solid-svg-icons";
+import { useTheme } from "next-themes";
 type Transaction = {
   id: string;
   status: string;
@@ -42,7 +43,7 @@ export default function Home() {
   const [showTransactionHistory, setShowTransactionHistory] = useState(false);
   const { user } = useAuth();
   const isLoading = useAtomValue(globalLoadingAtom);
-
+  const {theme, setTheme} = useTheme();
   const getPriorityScore = (transaction: Transaction) => {
     if (
       transaction.isRequested &&
@@ -122,7 +123,7 @@ export default function Home() {
 
   return (
     <>
-      <div className="block sm:hidden dark:bg-primary-dark">
+      <div className="block sm:hidden dark:bg-primary-dark ">
         {showTransactionHistory && (
           <div className="absolute">
             <TransactionHistory
@@ -131,7 +132,7 @@ export default function Home() {
             />
           </div>
         )}
-        <div className="bg-[#FFFFFF]  dark:bg-primary-dark 0 mx-5  ">
+        <div className="bg-[#FFFFFF]  dark:bg-primary-dark 0 mx-5 ">
           <div className="flex justify-between py-7">
             <div className="flex">
               <FontAwesomeIcon icon={faCircleUser} size="3x" className=" text-black dark:text-white"/>
@@ -148,7 +149,6 @@ export default function Home() {
               </h1>
               
             </div>
-
             <SignInModal />
           </div>
 
