@@ -23,7 +23,6 @@ import { useAuth } from "@/hooks/useAuth";
 import { useAtomValue } from "jotai";
 import { globalLoadingAtom } from "@/lib/atoms";
 import { faGears } from "@fortawesome/free-solid-svg-icons";
-import Skeleton from "@/components/Skeleton";
 type Transaction = {
   id: string;
   status: string;
