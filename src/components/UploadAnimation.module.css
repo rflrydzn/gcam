@@ -1,5 +1,5 @@
 .upload {
-  --background: #FFFFFF;
+  --background: var(--checkmark-fill);
   --text-drop: #CAC8CA;
   --text-upload: #2D2C2F;
   --progress-color: #E7E5E7;
@@ -14,8 +14,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: var(--background);
-  backdrop-filter: blur(5px);
   overflow: hidden;
 }
 
@@ -29,9 +27,9 @@
 }
 
 .progress-wrapper {
-  position: absolute;
-  width: 120px;
-  height: 120px;
+
+  width: 80px;
+  height: 80px;
   animation: rotate 2s linear infinite;
 }
 
@@ -39,7 +37,7 @@
   fill: none;
   stroke: var(--progress-color);
   stroke-width: 6;
-  stroke-dasharray: 380;
+  stroke-dasharray: 213;
   stroke-dashoffset: 150;
   animation: dash 2s ease-in-out infinite;
 }
@@ -168,6 +166,24 @@
     transform: rotate(0deg);
   }
   100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loadingCircle {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  border: 6px solid var(--checkmark-border);
+  border-top-color: var(--checkmark-fill); /* color of the animated segment */
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+  margin-bottom: 26px;
+
+}
+  
+@keyframes spin {
+  to {
     transform: rotate(360deg);
   }
 }

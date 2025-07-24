@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { faLock } from "@fortawesome/free-solid-svg-icons";
+import UploadAnimation from "./UploadAnimation";
 
 type Transaction = {
   id: string;
@@ -37,7 +38,7 @@ export default function TransactionCard({
   timeAgo: (timestamp: string) => string;
 }) {
   const [action, setAction] = useState<
-    "accepted" | "rejected" | "ocr" | "anonymous" | null
+    "accepted" | "rejected" | "ocr" | "anonymous" | "uploading" | "uploaded" | null
   >(null);
   const [ocrData, setOcrData] = useState<OCR>({
     isTransaction: true,
@@ -90,12 +91,26 @@ export default function TransactionCard({
     }
   };
 
+  const handleUpload = (isUploading: boolean) => {
+    if(isUploading) {
+      setAction("uploading")
+      console.log('uploading')
+    } else {
+      setAction("uploaded")
+      setTimeout(() => setAction(null), 5000)
+      console.log('uploaded')
+    }
+  }
   const renderOverlayContent = () => {
   switch (action) {
     case "accepted":
-      return <CheckMark />;
+      return <CheckMark text="accept"/>;
     case "rejected":
       return <CrossMark />;
+    case "uploading":
+      return <UploadAnimation />;
+    case "uploaded":
+      return <CheckMark text="upload" />;
     case "ocr":
       return (
         <div className="flex flex-col items-center">
@@ -174,6 +189,7 @@ export default function TransactionCard({
           onAccept={() => handleAccept()}
           onReject={() => handleReject()}
           onUnauthorized={() => handleUnauthorized(faLock)}
+          onUpload={(upload) => handleUpload(upload)}
         />
         {/* <p>{transaction.id}</p> */}
         <span className="text-gray-500 dark:text-gray-400">{timeAgo(transaction.timestamp)}</span>

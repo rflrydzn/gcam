@@ -2,7 +2,7 @@
 import { useState } from "react";
 import styles from "./Checkmark.module.css";
 
-export default function Checkmark() {
+export default function Checkmark({text} : {text: string}) {
   const [key, ] = useState(0);
 
   return (
@@ -16,7 +16,7 @@ export default function Checkmark() {
         </div>
         
       </div>
-      <p>Transaction done</p>
+      <p>{text === 'upload' ? 'Upload Done' : text === 'accept' ? 'Transaction done' : null}</p>
     </div>
   );
 }

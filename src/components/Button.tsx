@@ -18,12 +18,14 @@ type ButtonProps = {
   onAccept?: () => void;
   onReject?: () => void;
   onUnauthorized?: () => void;
+  onUpload?: (upload: boolean) => void;
 };
 const Button = ({
   transactionID,
   onAccept,
   onReject,
   onUnauthorized,
+  onUpload
 }: ButtonProps) => {
   // const [file, setFile] = useState<File | null>(null);
   const [, setLoading] = useState(false);
@@ -55,6 +57,7 @@ const Button = ({
       if (!file) return;
 
       setIsUploading(true);
+      onUpload?.(true)
       const formData = new FormData();
       formData.append("image", file);
 
@@ -68,10 +71,12 @@ const Button = ({
         const transactionRef = ref(db, `transactions/${transactionID}`);
 
         await update(transactionRef, { receiptimageUrl: result.url });
-        alert(`Receipt uploaded`);
+        // alert(`Receipt uploaded`);
+        onUpload?.(false)
       } catch (err) {
         console.error("Error uploading receipt:", err);
         setIsUploading(false);
+        
       }
     };
 
