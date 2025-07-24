@@ -23,6 +23,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useAtomValue } from "jotai";
 import { globalLoadingAtom } from "@/lib/atoms";
 import { faGears } from "@fortawesome/free-solid-svg-icons";
+import Skeleton from "@/components/Skeleton";
 type Transaction = {
   id: string;
   status: string;
@@ -34,7 +35,8 @@ type Transaction = {
 };
 
 export default function Home() {
-  const { data: transactions = [] } = useTransactions();
+  const { data: transactions = [], isLoading: isQueryLoading } =
+    useTransactions();
   // const [file, setFile] = useState<File | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedTransaction, setSelectedTransaction] =
@@ -131,24 +133,40 @@ export default function Home() {
           </div>
         )}
         <div className="bg-[#FFFFFF]  dark:bg-primary-dark 0 mx-5 ">
-          <div className="flex justify-between py-7">
+          {!isQueryLoading ? (
+            <div className="flex justify-between py-7">
             <div className="flex">
-              <FontAwesomeIcon icon={faCircleUser} size="3x" className=" text-black dark:text-white"/>
-              <h1 className="text-2xl m-3 dark:text-white">
-                {user ? (
-                  <p>Welcome back, Roy</p>
-                ) : !isLoading ? (
-                  <p className="text-sm text-black dark:text-white">
-                    Guest mode. Please log in.
-                  </p>
-                ) : (
-                  <p>Welcome back, Roy</p>
-                )}
+              <FontAwesomeIcon
+                icon={faCircleUser}
+                size="3x"
+                className=" text-black dark:text-white w-12 h-12"
+              />
+              <h1 className=" m-3 dark:text-white">
+                {user
+                  ? "Welcome back, Roy"
+                  : !isLoading
+                  ? "Guest mode. Please log in."
+                  : "Welcome back, Roy"}
               </h1>
-              
             </div>
             <SignInModal />
           </div>
+          ) : (
+            <div
+                       
+                        className="flex items-center justify-between animate-pulse py-8 "
+                      >
+                        <div className="flex items-center gap-x-3">
+                          <div className="h-12 w-12 rounded-full bg-gray-300 dark:bg-gray-700" />
+                          <div className="space-y-2">
+                            <div className="h-4 w-28 bg-gray-300 dark:bg-gray-700 rounded" />
+                            
+                          </div>
+                        </div>
+                        <div className=" bg-gray-300 dark:bg-gray-700 rounded-full w-7 h-7" />
+                      </div>
+          )}
+          
 
           {latestTransaction ? (
             <TransactionCard
@@ -156,7 +174,13 @@ export default function Home() {
               timeAgo={timeAgo}
             />
           ) : (
-            <p>Loading...</p>
+            <div
+              role="status"
+              className="flex items-center justify-center h-[212px] w-full bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700"
+            >
+              
+              
+            </div>
           )}
 
           <div>
@@ -168,32 +192,54 @@ export default function Home() {
                   </h5>
                 </div>
                 <div className="max-h-64 overflow-y-auto">
-                  {scored.map((tx) => (
-                    <div
-                      key={tx.id}
-                      className="flex items-center justify-between pb-3 pt-3 last:pb-0"
-                      onClick={() => handleModal(tx)}
-                    >
-                      <div className="flex items-center gap-x-3">
-                        <Image
-                          src={tx.isRequested ? ReceiptIcon : CashinIcon}
-                          alt="cashinicon"
-                          className="relative inline-block h-8 w-8 rounded-full object-cover object-center"
-                        />
-                        <div>
-                          <h6 className="text-slate-800 font-semibold dark:text-white">
-                            {tx.isRequested ? "Requesting receipt" : "Cash-In"}
-                          </h6>
-                          <p className="text-slate-500 text-sm dark:text-gray-400">
-                            {timeAgo(tx.timestamp)}
-                          </p>
+                  {!isQueryLoading ? (
+                    <div>
+                      {scored.map((tx) => (
+                        <div
+                          key={tx.id}
+                          className="flex items-center justify-between pb-3 pt-3 last:pb-0"
+                          onClick={() => handleModal(tx)}
+                        >
+                          <div className="flex items-center gap-x-3">
+                            <Image
+                              src={tx.isRequested ? ReceiptIcon : CashinIcon}
+                              alt="cashinicon"
+                              className="relative inline-block h-8 w-8 rounded-full object-cover object-center"
+                            />
+                            <div>
+                              <h6 className="text-slate-800 font-semibold dark:text-white">
+                                {tx.isRequested
+                                  ? "Requesting receipt"
+                                  : "Cash-In"}
+                              </h6>
+                              <p className="text-slate-500 text-sm dark:text-gray-400">
+                                {timeAgo(tx.timestamp)}
+                              </p>
+                            </div>
+                          </div>
+                          <button className="px-5 py-2.5 bg-[#1A1A1A] text-white rounded-3xl text-[14px] leading-4">
+                            DETAILS
+                          </button>
                         </div>
-                      </div>
-                      <button className="px-5 py-2.5 bg-[#1A1A1A] text-white rounded-3xl text-[14px] leading-4">
-                        DETAILS
-                      </button>
+                      ))}
                     </div>
-                  ))}
+                  ) : (
+                    Array.from({ length: 4 }).map((_, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center justify-between pb-3 pt-3 last:pb-0 animate-pulse space-y-2"
+                      >
+                        <div className="flex items-center gap-x-3">
+                          <div className="h-8 w-8 rounded-full bg-gray-300 dark:bg-gray-700" />
+                          <div className="space-y-2">
+                            <div className="h-4 w-28 bg-gray-300 dark:bg-gray-700 rounded" />
+                            <div className="h-3 w-20 bg-gray-200 dark:bg-gray-600 rounded" />
+                          </div>
+                        </div>
+                        <div className="px-5 py-2.5 bg-gray-300 dark:bg-gray-700 rounded-3xl w-20 h-8" />
+                      </div>
+                    ))
+                  )}
                 </div>
 
                 {selectedTransaction && (
@@ -221,8 +267,9 @@ export default function Home() {
                     View all
                   </button>
                 </div>
-                <div className="divide-y divide-slate-200">
-                  {unscored.slice(0, 3).map((tx) => (
+                
+                  {!isQueryLoading ? (<div className="divide-y divide-slate-200">
+                    {unscored.slice(0, 3).map((tx) => (
                     <div
                       key={tx.id}
                       className="flex items-center justify-between pb-3 pt-3 last:pb-0"
@@ -233,7 +280,9 @@ export default function Home() {
                           <h6 className="text-slate-800 font-semibold dark:text-white">
                             {tx.status}
                           </h6>
-                          <p className="text-slate-500 text-sm dark:text-slate-400">Cash-In</p>
+                          <p className="text-slate-500 text-sm dark:text-slate-400">
+                            Cash-In
+                          </p>
                         </div>
                       </div>
                       <h6 className="text-slate-500 font-medium dark:text-slate-400">
@@ -241,7 +290,25 @@ export default function Home() {
                       </h6>
                     </div>
                   ))}
-                </div>
+                  </div>) : (
+                    Array.from({ length: 2 }).map((_, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center justify-between pb-3 pt-3 last:pb-0 animate-pulse"
+                      >
+                        <div className="flex items-center gap-x-3">
+                          
+                          <div className="space-y-2">
+                            <div className="h-4 w-28 bg-gray-300 dark:bg-gray-700 rounded" />
+                            <div className="h-3 w-20 bg-gray-200 dark:bg-gray-600 rounded" />
+                          </div>
+                        </div>
+                        <div className="px-5 py-2.5 bg-gray-300 dark:bg-gray-700 rounded w-20 h-3" />
+                      </div>
+                    ))
+                  )}
+                  
+                
 
                 {selectedTransaction && (
                   <TransactionDetails
