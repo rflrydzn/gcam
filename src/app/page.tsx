@@ -23,6 +23,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useAtomValue } from "jotai";
 import { globalLoadingAtom } from "@/lib/atoms";
 import { faGears } from "@fortawesome/free-solid-svg-icons";
+import { timeAgo } from "@/lib/dateTimeFormat";
 type Transaction = {
   id: string;
   status: string;
@@ -36,7 +37,6 @@ type Transaction = {
 export default function Home() {
   const { data: transactions = [], isLoading: isQueryLoading } =
     useTransactions();
-  // const [file, setFile] = useState<File | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedTransaction, setSelectedTransaction] =
     useState<Transaction | null>(null);
@@ -70,46 +70,7 @@ export default function Home() {
     () => console.log("latest", latestTransaction),
     [latestTransaction]
   );
-  // useEffect(() => console.log("pending", scored), [scored]);
-
-  // let formatted = "";
-  // if (latestTransaction && latestTransaction.timestamp) {
-  //   const original = latestTransaction.timestamp;
-  //   const date = new Date(original.replace(" ", "T"));
-
-  //   const options: Intl.DateTimeFormatOptions = {
-  //     year: "numeric",
-  //     month: "long",
-  //     day: "2-digit",
-  //     hour: "numeric",
-  //     minute: "2-digit",
-  //     hour12: true,
-  //   };
-
-  //   formatted = date
-  //     .toLocaleString("en-US", options)
-  //     .replace(" at ", " ")
-  //     .replace(",", "")
-  //     .replace("AM", "am")
-  //     .replace("PM", "pm");
-  // }
-
-  function timeAgo(dateString: string) {
-    const createdAt = new Date(dateString.replace(" ", "T")); // ensure valid ISO format
-    const now = new Date();
-    const diffMs = now.getTime() - createdAt.getTime();
-
-    const seconds = Math.floor(diffMs / 1000);
-    const minutes = Math.floor(seconds / 60);
-    const hours = Math.floor(minutes / 60);
-    const days = Math.floor(hours / 24);
-
-    if (seconds < 60) return `${seconds} sec${seconds === 1 ? "" : "s"} ago`;
-    if (minutes < 60) return `${minutes} min${minutes === 1 ? "" : "s"} ago`;
-    if (hours < 24) return `${hours} hour${hours === 1 ? "" : "s"} ago`;
-    return `${days} day${days === 1 ? "" : "s"} ago`;
-  }
-
+  
   const handleModal = (tx: Transaction) => {
     setModalOpen(true);
     setSelectedTransaction(tx);

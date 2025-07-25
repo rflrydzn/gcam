@@ -6,6 +6,7 @@ import TransactionDetails from "./TransactionDetails";
 import CashinIcon from "../../public/cashin2.png";
 import BackIcon from "../../public/BackIcon.svg";
 import WhiteBackIcon from '../../public/white.svg'
+import { formatTime, formatDate } from "@/lib/dateTimeFormat";
 
 interface Transaction {
   id: string;
@@ -32,6 +33,19 @@ const TransactionHistory = ({ data, onClose }: TransactionProps) => {
     setSelectedTransaction(tx);
   };
 
+  const groupByDate = (transactions: Transaction[]) => {
+  return transactions.reduce((groups: { [key: string]: Transaction[] }, tx) => {
+    const dateKey = formatDate(tx.timestamp);
+    if (!groups[dateKey]) {
+      groups[dateKey] = [];
+    }
+    groups[dateKey].push(tx);
+    return groups;
+  }, {});
+};
+
+  const grouped = groupByDate(data);
+
   return (
     <div>
       <div className=" flex flex-col  bg-white   rounded-lg w-screen absolute z-50  overflow-y-auto dark:bg-primary-dark">
@@ -41,36 +55,42 @@ const TransactionHistory = ({ data, onClose }: TransactionProps) => {
               <BackIcon className='block dark:hidden'/>
               <WhiteBackIcon className='hidden dark:block'/>
             </button>
-            <h5 className="flex-1 text-center text-slate-800 text-lg font-semibold dark:text-white">
+            <h5 className="flex-1 text-center text-slate-800 text-xl font-semibold dark:text-white">
               Transaction History
             </h5>
             {/* Empty element to balance the layout */}
             <div className="w-8" /> {/* Same width as the back button */}
           </div>
           <div className="divide-y divide-slate-200">
-            {data.map((tx, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-between pb-3 pt-3 last:pb-0"
-                onClick={() => handleModal(tx)}
-              >
-                
-                <div className="flex items-center gap-x-3">
-                  <Image
-                    src={CashinIcon}
-                    alt="cashinicon"
-                    className="relative inline-block h-8 w-8 rounded-full object-cover object-center"
-                  />
-                  <div>
-                    <h6 className="text-slate-800 font-semibold dark:text-white">
-                      {tx.status}
-                    </h6>
-                    <p className="text-slate-600 text-sm dark:text-white">maria@gmail.com</p>
-                  </div>
-                </div>
-                <h6 className="text-slate-600 font-medium dark:text-white">{tx.timestamp}</h6>
-              </div>
-            ))}
+            {Object.entries(grouped).map(([date, transactions]) => (
+  <div key={date} className="mb-4">
+    <h6 className="text-slate-500 text-2xl font-semibold mb-2">{date}</h6>
+
+    {transactions.map((tx, index) => (
+      <div
+        key={index}
+        onClick={() => handleModal(tx)}
+        className="flex justify-between items-center px-2 py-4 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer"
+      >
+        <div className="flex items-center gap-x-2">
+          <Image
+            src={CashinIcon}
+            alt="cashin"
+            className="h-8 w-8 object-cover"
+          />
+          <div>
+            <div className="font-semibold text-lg capitalize dark:text-white">{tx.status}</div>
+          </div>
+        </div>
+        <span
+          className={`text-md font-medium`}
+        >
+          {formatTime(tx.timestamp)}
+        </span>
+      </div>
+    ))}
+  </div>
+))}
             <TransactionDetails
                   data={selectedTransaction!}
                   isOpen={isModalOpen}
