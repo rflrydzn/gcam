@@ -12,7 +12,7 @@ import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { faLock } from "@fortawesome/free-solid-svg-icons";
 import UploadAnimation from "./UploadAnimation";
-
+import { isWithinADay } from "@/lib/dateTimeFormat";
 type Transaction = {
   id: string;
   status: string;
@@ -49,7 +49,7 @@ export default function TransactionCard({
   const [isOcr, setIsOcr] = useState(false);
   const [fontawesomeIcon, setFontawesomeIcon] = useState<IconDefinition>(faEyeSlash);
   const { user } = useAuth();
-
+  const isRecentRequest = transaction?.isRequested && isWithinADay(transaction.timestamp);
   const handleAccept = () => {
     setAction("accepted");
     setTimeout(() => setAction(null), 2000);
@@ -190,6 +190,10 @@ export default function TransactionCard({
           onReject={() => handleReject()}
           onUnauthorized={() => handleUnauthorized(faLock)}
           onUpload={(upload) => handleUpload(upload)}
+          receiptRequest={{
+    requested: transaction.isRequested,
+    timestamp: transaction.timestamp,}}
+          
         />
         {/* <p>{transaction.id}</p> */}
         <span className="text-gray-500 dark:text-gray-400">{timeAgo(transaction.timestamp)}</span>

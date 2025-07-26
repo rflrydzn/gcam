@@ -12,6 +12,7 @@ import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "@/hooks/useAuth";
+import { isWithinADay } from "@/lib/dateTimeFormat";
 
 type ButtonProps = {
   transactionID: string;
@@ -19,19 +20,25 @@ type ButtonProps = {
   onReject?: () => void;
   onUnauthorized?: () => void;
   onUpload?: (upload: boolean) => void;
+  receiptRequest?: {
+    requested: boolean;
+    timestamp?: string;
+    
+  }
 };
 const Button = ({
   transactionID,
   onAccept,
   onReject,
   onUnauthorized,
-  onUpload
+  onUpload,
+  receiptRequest,
 }: ButtonProps) => {
   // const [file, setFile] = useState<File | null>(null);
   const [, setLoading] = useState(false);
   const [, setIsUploading] = useState(false);
   const { user } = useAuth();
-
+  const isRecentRequest = receiptRequest?.requested && isWithinADay(receiptRequest.timestamp);
   const updateStatus = async (transactionID: string, newStatus: string) => {
     if (!user) {
       if (onUnauthorized) onUnauthorized();
@@ -96,7 +103,7 @@ const Button = ({
         Reject
       </button>
       <label
-        className="px-6 py-3 bg-[#1A1A1A] text-white rounded-3xl text-[14px] leading-4 "
+        className={`px-6 py-3 bg-[#1A1A1A] text-white rounded-3xl text-[14px] leading-4 ${isRecentRequest && 'animate-bounce'} `}
         onClick={(e) => {
           if (!user) {
             e.preventDefault();

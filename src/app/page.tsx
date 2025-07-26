@@ -14,7 +14,9 @@ import TransactionDetails from "@/components/TransactionDetails";
 import TransactionHistory from "@/components/TransactionHistory";
 import Image from "next/image";
 import CashinIcon from "../../public/cashin2.png";
+import CashinIconDark from "../../public/cashin-dark.png"
 import ReceiptIcon from "../../public/receipt.png";
+import ReceiptIconDark from "../../public/receipt-dark.png"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleUser } from "@fortawesome/free-solid-svg-icons";
 import TransactionCard from "@/components/TransactionCard";
@@ -24,6 +26,7 @@ import { useAtomValue } from "jotai";
 import { globalLoadingAtom } from "@/lib/atoms";
 import { faGears } from "@fortawesome/free-solid-svg-icons";
 import { timeAgo } from "@/lib/dateTimeFormat";
+import { useTheme } from "next-themes";
 type Transaction = {
   id: string;
   status: string;
@@ -43,6 +46,7 @@ export default function Home() {
   const [showTransactionHistory, setShowTransactionHistory] = useState(false);
   const { user } = useAuth();
   const isLoading = useAtomValue(globalLoadingAtom);
+  const {theme} = useTheme();
   const getPriorityScore = (transaction: Transaction) => {
     if (
       transaction.isRequested &&
@@ -154,7 +158,7 @@ export default function Home() {
                 <div className="max-h-64 overflow-y-auto">
                   {!isQueryLoading ? (
                     <div>
-                      {scored.map((tx) => (
+                      {scored.filter((tx) => tx.id !== latestTransaction?.id).map((tx) => (
                         <div
                           key={tx.id}
                           className="flex items-center justify-between pb-3 pt-3 last:pb-0"
@@ -162,8 +166,15 @@ export default function Home() {
                         >
                           <div className="flex items-center gap-x-3">
                             <Image
-                              src={tx.isRequested ? ReceiptIcon : CashinIcon}
-                              alt="cashinicon"
+src={
+  tx.isRequested
+    ? theme === 'dark'
+      ? ReceiptIconDark
+      : ReceiptIcon
+    : theme === 'dark'
+      ? CashinIconDark
+      : CashinIcon
+}                              alt="cashinicon"
                               className="relative inline-block h-8 w-8 rounded-full object-cover object-center"
                             />
                             <div>

@@ -4,6 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
+import { formatDateTime } from "@/lib/dateTimeFormat";
 
 interface ModalProps {
   isOpen: boolean;
@@ -48,13 +49,27 @@ const TransactionDetails = ({ data, isOpen, onClose }: ModalProps) => {
       >
         {!user ? (
           <div className="items-center justify-center flex h-full flex-col">
-            <FontAwesomeIcon icon={faEyeSlash} size="4x" className="dark:text-white"/>
+            <FontAwesomeIcon
+              icon={faEyeSlash}
+              size="4x"
+              className="dark:text-white"
+            />
             <p className="dark:text-white">Please login.</p>
           </div>
         ) : (
           <div>
-            <h1 className="text-xl font-bold mb-4 dark:text-white">Status: {data.status}</h1>
-            <p className="mb-2 text-gray-600 dark:text-white">Timestamp: {data.timestamp}</p>
+            <div className="mb-4">
+              <h1
+                className="text-2xl font-bold"
+              >
+                {data.status.charAt(0).toUpperCase() + data.status.slice(1)}
+              </h1>
+            </div>
+
+            <p className="mb-2 text-gray-600 dark:text-white">
+               {formatDateTime(data.timestamp)}
+            </p>
+            
             <p className="dark:text-white">id: {data.id}</p>
             <div className="w-full h-56 mb-4 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-600">
               <img
@@ -71,7 +86,13 @@ const TransactionDetails = ({ data, isOpen, onClose }: ModalProps) => {
               &times;
             </button>
 
-            <Button transactionID={data.id} />
+            <Button
+              transactionID={data.id}
+              receiptRequest={{
+                requested: data.isRequested ?? false,
+                timestamp: data.timestamp,
+              }}
+            />
           </div>
         )}
       </div>

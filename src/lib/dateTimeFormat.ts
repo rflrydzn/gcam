@@ -1,3 +1,25 @@
+export const formatDateTime = (timestamp: string) => {
+  let formatted = ""
+  const date = new Date(timestamp.replace(" ", "T"));
+
+    const options: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "long",
+      day: "2-digit",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    };
+
+    formatted = date
+      .toLocaleString("en-US", options)
+      .replace(" at ", " ")
+      .replace(",", "")
+      .replace("AM", "am")
+      .replace("PM", "pm");
+
+      return formatted
+}
 
 export const formatDate = (timestamp: string) => {
   const date = new Date(timestamp.replace(" ", "T"));
@@ -32,3 +54,14 @@ export const timeAgo = (dateString: string) => {
     if (hours < 24) return `${hours} hour${hours === 1 ? "" : "s"} ago`;
     return `${days} day${days === 1 ? "" : "s"} ago`;
 }
+
+export const isWithinADay = (timestamp?: string) => {
+  if (!timestamp) return false;
+
+  const date = new Date(timestamp.replace(" ", "T"));
+  const now = new Date();
+  const diffInMs = now.getTime() - date.getTime();
+  const diffInHours = diffInMs / (1000 * 60 * 60);
+
+  return diffInHours <= 24;
+};
