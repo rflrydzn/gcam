@@ -12,7 +12,6 @@ import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { faLock } from "@fortawesome/free-solid-svg-icons";
 import UploadAnimation from "./UploadAnimation";
-import { isWithinADay } from "@/lib/dateTimeFormat";
 type Transaction = {
   id: string;
   status: string;
@@ -38,7 +37,13 @@ export default function TransactionCard({
   timeAgo: (timestamp: string) => string;
 }) {
   const [action, setAction] = useState<
-    "accepted" | "rejected" | "ocr" | "anonymous" | "uploading" | "uploaded" | null
+    | "accepted"
+    | "rejected"
+    | "ocr"
+    | "anonymous"
+    | "uploading"
+    | "uploaded"
+    | null
   >(null);
   const [ocrData, setOcrData] = useState<OCR>({
     isTransaction: true,
@@ -47,9 +52,9 @@ export default function TransactionCard({
     amount: "...",
   });
   const [isOcr, setIsOcr] = useState(false);
-  const [fontawesomeIcon, setFontawesomeIcon] = useState<IconDefinition>(faEyeSlash);
+  const [fontawesomeIcon, setFontawesomeIcon] =
+    useState<IconDefinition>(faEyeSlash);
   const { user } = useAuth();
-  const isRecentRequest = transaction?.isRequested && isWithinADay(transaction.timestamp);
   const handleAccept = () => {
     setAction("accepted");
     setTimeout(() => setAction(null), 2000);
@@ -70,7 +75,7 @@ export default function TransactionCard({
     if (!user) {
       setAction("anonymous");
       setFontawesomeIcon(faLock);
-      setTimeout(() => setAction(null), 5000)
+      setTimeout(() => setAction(null), 5000);
       return;
     }
     setAction("ocr");
@@ -92,60 +97,58 @@ export default function TransactionCard({
   };
 
   const handleUpload = (isUploading: boolean) => {
-    if(isUploading) {
-      setAction("uploading")
-      console.log('uploading')
+    if (isUploading) {
+      setAction("uploading");
+      console.log("uploading");
     } else {
-      setAction("uploaded")
-      setTimeout(() => setAction(null), 5000)
-      console.log('uploaded')
+      setAction("uploaded");
+      setTimeout(() => setAction(null), 5000);
+      console.log("uploaded");
     }
-  }
+  };
   const renderOverlayContent = () => {
-  switch (action) {
-    case "accepted":
-      return <CheckMark text="accept"/>;
-    case "rejected":
-      return <CrossMark />;
-    case "uploading":
-      return <UploadAnimation />;
-    case "uploaded":
-      return <CheckMark text="upload" />;
-    case "ocr":
-      return (
-        <div className="flex flex-col items-center">
-          <img
-            src="https://static.wikia.nocookie.net/logopedia/images/d/d2/Gemini_2024_animated.gif"
-            width={100}
-          />
-          <p>Processing...</p>
-        </div>
-      );
-    case "anonymous":
-      return (
-        <div
-          className="flex flex-col items-center h-full justify-center"
-          onClick={() => setAction(null)}
-        >
-          <FontAwesomeIcon icon={fontawesomeIcon} size="4x" />
-          <p className="p-2">Please login.</p>
-        </div>
-      );
-    default:
-      return null;
-  }
-};
-
-
+    switch (action) {
+      case "accepted":
+        return <CheckMark text="accept" />;
+      case "rejected":
+        return <CrossMark />;
+      case "uploading":
+        return <UploadAnimation />;
+      case "uploaded":
+        return <CheckMark text="upload" />;
+      case "ocr":
+        return (
+          <div className="flex flex-col items-center">
+            <img
+              src="https://static.wikia.nocookie.net/logopedia/images/d/d2/Gemini_2024_animated.gif"
+              width={100}
+            />
+            <p>Processing...</p>
+          </div>
+        );
+      case "anonymous":
+        return (
+          <div
+            className="flex flex-col items-center h-full justify-center"
+            onClick={() => setAction(null)}
+          >
+            <FontAwesomeIcon icon={fontawesomeIcon} size="4x" />
+            <p className="p-2">Please login.</p>
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
     <div className="relative">
       {action && (
-      <div className="absolute inset-0 bg-white/100 backdrop-blur-sm flex items-center justify-center z-10 dark:bg-primary-dark/80 dark:text-white">
-        {renderOverlayContent()}
-      </div>
-    )}
-      
+        <div className="absolute inset-0 bg-white/100 backdrop-blur-sm flex items-center justify-center z-10 dark:bg-primary-dark/80 dark:text-white">
+          {renderOverlayContent()}
+        </div>
+      )}
+
       <div
         className={`${styles.shadow} absolute top-0 left-0 w-full h-full rounded-[8px]`}
       ></div>
@@ -158,7 +161,9 @@ export default function TransactionCard({
                 ? "Not a transaction."
                 : `${ocrData.number} - ₱${ocrData.amount}`}
             </h1>
-            <h1 className="dark:text-white">{ocrData.isTransaction && ocrData.accountName}</h1>
+            <h1 className="dark:text-white">
+              {ocrData.isTransaction && ocrData.accountName}
+            </h1>
             <span className="text-[14px] leading-6 dark:text-white">
               {ocrData.isTransaction && "Cash-In"}
             </span>
@@ -172,7 +177,9 @@ export default function TransactionCard({
                 className="border border-black rounded-2xl px-3 py-1 flex items-center gap-1 text-sm dark:border-white"
                 onClick={() => handleOCR(transaction.imageUrl)}
               >
-                <span className="flex text-black justify-center items-center gap-1 dark:text-white">OCR <GeminiIcon /></span>
+                <span className="flex text-black justify-center items-center gap-1 dark:text-white">
+                  OCR <GeminiIcon />
+                </span>
               </button>
             ) : null}
           </div>
@@ -191,12 +198,14 @@ export default function TransactionCard({
           onUnauthorized={() => handleUnauthorized(faLock)}
           onUpload={(upload) => handleUpload(upload)}
           receiptRequest={{
-    requested: transaction.isRequested,
-    timestamp: transaction.timestamp,}}
-          
+            requested: transaction.isRequested,
+            timestamp: transaction.timestamp,
+          }}
         />
         {/* <p>{transaction.id}</p> */}
-        <span className="text-gray-500 dark:text-gray-400">{timeAgo(transaction.timestamp)}</span>
+        <span className="text-gray-500 dark:text-gray-400">
+          {timeAgo(transaction.timestamp)}
+        </span>
       </div>
     </div>
   );
