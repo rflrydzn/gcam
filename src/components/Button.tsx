@@ -10,7 +10,7 @@ import {
 } from "firebase/database";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
+import { faCloudArrowUp, faCheck, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "@/hooks/useAuth";
 import { isWithinADay } from "@/lib/dateTimeFormat";
 
@@ -86,24 +86,31 @@ const Button = ({
         
       }
     };
-
   return (
-    <div className="flex justify-between w-full">
+    <div className="flex w-full gap-2">
       <button
-        className="px-6 py-3 bg-[#1A1A1A] text-white rounded-3xl text-[14px] leading-4"
+        className="flex-1 p-2 bg-[#1A1A1A] text-white rounded-3xl text-[14px] leading-4  "
         onClick={() => updateStatus(transactionID, "completed")}
       >
-        Accept
+        <div className="flex justify-center gap-1">
+          <FontAwesomeIcon icon={faCheck} className=""/>
+        <span className="hidden [@media(min-width:391px)]:inline">Accept</span>
+        </div>
+        
       </button>
 
       <button
-        className="px-6 py-3 bg-[#1A1A1A] text-white rounded-3xl text-[14px] leading-4"
+        className="flex-1 p-2 bg-[#1A1A1A] text-white rounded-3xl text-[14px] leading-4"
         onClick={() => updateStatus(transactionID, "rejected")}
       >
-        Reject
+        <div className="flex justify-center gap-1">
+              <FontAwesomeIcon icon={faXmark} className=""/>
+        <span className="hidden [@media(min-width:391px)]:inline">Reject</span>
+        </div>
+
       </button>
       <label
-        className={`px-6 py-3 bg-[#1A1A1A] text-white rounded-3xl text-[14px] leading-4 ${isRecentRequest && 'animate-bounce'} `}
+        className={`flex-1 p-2 bg-[#1A1A1A] text-white rounded-3xl text-[14px] leading-4 ${isRecentRequest && 'animate-bounce'} `}
         onClick={(e) => {
           if (!user) {
             e.preventDefault();
@@ -111,10 +118,12 @@ const Button = ({
           }
         }}
       >
-        <div className="flex">
-          <FontAwesomeIcon icon={faCloudArrowUp} />
-          <p className="hidden pl-1 [@media(min-width:378px)]:inline">Upload</p>
+        <div className="flex justify-center gap-1">
+           <FontAwesomeIcon icon={faCloudArrowUp} className=""/>
+          <span className="hidden [@media(min-width:391px)]:inline">Upload</span>
         </div>
+         
+        
         <input
           type="file"
           className="hidden"

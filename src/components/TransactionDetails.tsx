@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import { formatDateTime } from "@/lib/dateTimeFormat";
+import OCRButton from "./OCRButton";
 
 interface ModalProps {
   isOpen: boolean;
@@ -20,9 +21,16 @@ interface ModalProps {
   };
 }
 
+type OCR = {
+  isTransaction: boolean,
+  number: string,
+  accountName: string,
+  amount: number
+}
 const TransactionDetails = ({ data, isOpen, onClose }: ModalProps) => {
   const { user } = useAuth();
   const [showContent, setShowContent] = useState(false);
+  const [ocrData, setOcrData] = useState<OCR | null>(null);
 
   useEffect(() => {
     if (isOpen) {
@@ -33,6 +41,8 @@ const TransactionDetails = ({ data, isOpen, onClose }: ModalProps) => {
       setShowContent(false);
     }
   }, [isOpen]);
+
+  useEffect(() => console.log('from parent',ocrData), [ocrData])
 
   if (!isOpen) return null;
 
@@ -71,7 +81,8 @@ const TransactionDetails = ({ data, isOpen, onClose }: ModalProps) => {
             </p>
             
             <p className="dark:text-white">id: {data.id}</p>
-            <div className="w-full h-56 mb-4 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-600">
+            <p>{ocrData?.isTransaction ? ocrData.number : 'Not a transaction'}</p>
+            <div className="w-72 h-56 mb-4 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-600">
               <img
                 src={data.imageUrl}
                 alt="Transaction"
@@ -93,6 +104,8 @@ const TransactionDetails = ({ data, isOpen, onClose }: ModalProps) => {
                 timestamp: data.timestamp,
               }}
             />
+
+            <OCRButton imageUrl={data.imageUrl} onResult={(data) => setOcrData(data)}/>
           </div>
         )}
       </div>

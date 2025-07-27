@@ -5,13 +5,12 @@ import CheckMark from "@/components/Checkmark";
 import CrossMark from "@/components/Crossmark";
 import styles from "./UploadAnimation.module.css";
 import CopyButton from "./CopyButton";
-import GeminiIcon from "../../public/gemini-color.svg";
-import { useAuth } from "@/hooks/useAuth";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { faLock } from "@fortawesome/free-solid-svg-icons";
 import UploadAnimation from "./UploadAnimation";
+import OCRButton from "./OCRButton";
 type Transaction = {
   id: string;
   status: string;
@@ -51,10 +50,9 @@ export default function TransactionCard({
     accountName: "xxx... x",
     amount: "...",
   });
-  const [isOcr, setIsOcr] = useState(false);
+  const [isOcr, ] = useState(false);
   const [fontawesomeIcon, setFontawesomeIcon] =
     useState<IconDefinition>(faEyeSlash);
-  const { user } = useAuth();
   const handleAccept = () => {
     setAction("accepted");
     setTimeout(() => setAction(null), 2000);
@@ -71,29 +69,33 @@ export default function TransactionCard({
     setTimeout(() => setAction(null), 5000);
   };
 
-  const handleOCR = async (imageUrl: string) => {
-    if (!user) {
-      setAction("anonymous");
-      setFontawesomeIcon(faLock);
-      setTimeout(() => setAction(null), 5000);
-      return;
-    }
-    setAction("ocr");
-    try {
-      const res = await fetch("/api/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ imageUrl }),
-      });
+  // const handleOCR = async (imageUrl: string) => {
+  //   if (!user) {
+  //     setAction("anonymous");
+  //     setFontawesomeIcon(faLock);
+  //     setTimeout(() => setAction(null), 5000);
+  //     return;
+  //   }
+  //   setAction("ocr");
+  //   try {
+  //     const res = await fetch("/api/", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({ imageUrl }),
+  //     });
 
-      const data = await res.json();
-      console.log(data);
-      setOcrData(data);
-      setIsOcr(true);
-      setAction(null);
-    } catch (err) {
-      console.error("Error sending image", err);
-    }
+  //     const data = await res.json();
+  //     console.log(data);
+  //     setOcrData(data);
+  //     setIsOcr(true);
+  //     setAction(null);
+  //   } catch (err) {
+  //     console.error("Error sending image", err);
+  //   }
+  // };
+  const handleOCR = (data: OCR) => {
+    setOcrData(data);
+    console.log("card ocr", data);
   };
 
   const handleUpload = (isUploading: boolean) => {
@@ -173,14 +175,21 @@ export default function TransactionCard({
             {isOcr && ocrData.isTransaction ? (
               <CopyButton value={ocrData.number} />
             ) : ocrData.isTransaction ? (
-              <button
-                className="border border-black rounded-2xl px-3 py-1 flex items-center gap-1 text-sm dark:border-white"
-                onClick={() => handleOCR(transaction.imageUrl)}
-              >
-                <span className="flex text-black justify-center items-center gap-1 dark:text-white">
-                  OCR <GeminiIcon />
-                </span>
-              </button>
+              // <button
+              //   className="border border-black rounded-2xl px-3 py-1 flex items-center gap-1 text-sm dark:border-white"
+              //   onClick={() => handleOCR(transaction.imageUrl)}
+              // >
+              //   <span className="flex text-black justify-center items-center gap-1 dark:text-white">
+              //     OCR <GeminiIcon />
+              //   </span>
+              // </button>
+              <OCRButton
+                imageUrl={transaction.imageUrl}
+                onResult={(data) => handleOCR(data)}
+                onUnauthorized={() => handleUnauthorized(faLock)}
+                onStart={() => setAction("ocr")}
+                onFinish={() => setAction(null)}
+              />
             ) : null}
           </div>
           {/* <img src="https://static.wikia.nocookie.net/logopedia/images/d/d2/Gemini_2024_animated.gif" /> */}
@@ -189,7 +198,11 @@ export default function TransactionCard({
         <ImageModal
           img={transaction.imageUrl}
           onUnauthorized={() => handleUnauthorized(faEyeSlash)}
-          caption={!ocrData.isTransaction ? "Not a transaction" : `${ocrData.number} - ₱${ocrData.amount}`}
+          caption={
+            !ocrData.isTransaction
+              ? "Not a transaction"
+              : `${ocrData.number} - ₱${ocrData.amount}`
+          }
         />
 
         <Button

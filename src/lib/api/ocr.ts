@@ -8,6 +8,7 @@ export const fetchOcr = async (imageUrl: string) => {
     if (!res.ok) {
         throw new Error("Failed to fetch OCR")
     }
-
+    // In fetchOcr function
+console.log("fetchOcr is called with:", imageUrl);
     return res.json();
 }
