@@ -7,15 +7,17 @@ import { useAuth } from "@/hooks/useAuth";
 export default function ImageModal({
   img,
   onUnauthorized,
+  caption
 }: {
   img: string;
   onUnauthorized: () => void;
+  caption: string
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [hasOpened, setHasOpened] = useState(false);
 
   const [imgSrc] = useState(img); // replace with your image
-  const [caption, setCaption] = useState("09xx xxx xxxx");
+  // const [caption, setCaption] = useState("09xx xxx xxxx");
   const [, setOrigin] = useState({ top: 0, left: 0 });
   const triggerRef = useRef<HTMLDivElement>(null);
   const { user } = useAuth();
@@ -32,7 +34,7 @@ export default function ImageModal({
     setIsOpen(true);
     setHasOpened(true); // Hide the ping forever after first open
 
-    setCaption("09xx xxx xxxx"); // Or dynamically set caption
+    // setCaption("09xx xxx xxxx"); // Or dynamically set caption
   };
 
   const closeModal = () => {

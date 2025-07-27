@@ -189,6 +189,7 @@ export default function TransactionCard({
         <ImageModal
           img={transaction.imageUrl}
           onUnauthorized={() => handleUnauthorized(faEyeSlash)}
+          caption={!ocrData.isTransaction ? "Not a transaction" : `${ocrData.number} - ₱${ocrData.amount}`}
         />
 
         <Button
