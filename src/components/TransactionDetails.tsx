@@ -31,6 +31,7 @@ const TransactionDetails = ({ data, isOpen, onClose }: ModalProps) => {
   const { user } = useAuth();
   const [showContent, setShowContent] = useState(false);
   const [ocrData, setOcrData] = useState<OCR | null>(null);
+  const [action, setAction] = useState<'ocr' | null>(null)
 
   useEffect(() => {
     if (isOpen) {
@@ -68,14 +69,25 @@ const TransactionDetails = ({ data, isOpen, onClose }: ModalProps) => {
           </div>
         ) : (
           <div>
-            <div className="mb-4">
+            {action === 'ocr' && (
+        <div className="absolute inset-0 bg-white/100 backdrop-blur-sm flex items-center justify-center z-10 dark:bg-primary-dark/80 dark:text-white">
+          <div className="flex flex-col items-center">
+            <img
+              src="https://static.wikia.nocookie.net/logopedia/images/d/d2/Gemini_2024_animated.gif"
+              width={100}
+            />
+            <p>Processing...</p>
+          </div>
+        </div>
+      )}
+            
               <h1
                 className="text-2xl font-bold"
               >
                 {data.status.charAt(0).toUpperCase() + data.status.slice(1)}
               </h1>
-            </div>
-
+            
+      
             <p className="mb-2 text-gray-600 dark:text-white">
                {formatDateTime(data.timestamp)}
             </p>
@@ -105,7 +117,7 @@ const TransactionDetails = ({ data, isOpen, onClose }: ModalProps) => {
               }}
             />
 
-            <OCRButton imageUrl={data.imageUrl} onResult={(data) => setOcrData(data)}/>
+            <OCRButton imageUrl={data.imageUrl} onResult={(data) => setOcrData(data)} onStart={() => setAction('ocr')} onFinish={() => setAction(null)}/>
           </div>
         )}
       </div>
