@@ -12,8 +12,8 @@ export default function QueryProvider({ children }: { children: ReactNode }) {
     new QueryClient({
       defaultOptions: {
         queries: {
-          staleTime: 1000 * 10, // 24 hours
-          gcTime: 1000 * 10,    // 24 hours
+          staleTime: 1000 * 30, // 24 hours
+          gcTime: 1000 * 30,    // 24 hours
         },
       },
     })
