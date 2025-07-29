@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import QueryProvider from "@/components/queryProvider";
-import { Balsamiq_Sans } from 'next/font/google';
-import {ThemeProvider} from 'next-themes'
+import QueryProvider from "@/providers/queryProvider";
+import { Balsamiq_Sans } from "next/font/google";
+import { ThemeProvider } from "next-themes";
 const balsamiq = Balsamiq_Sans({
-  subsets: ['latin'],
-  weight: ['400', '700'], // Optional
+  subsets: ["latin"],
+  weight: ["400", "700"], // Optional
 });
 
 const geistSans = Geist({
@@ -35,7 +35,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${balsamiq.className} antialiased dark:bg-primary-dark`}
       >
         <QueryProvider>
-          <ThemeProvider attribute='class' enableSystem defaultTheme="system" >
+          <ThemeProvider attribute="class" enableSystem defaultTheme="system">
             {children}
           </ThemeProvider>
         </QueryProvider>

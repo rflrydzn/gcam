@@ -3,7 +3,6 @@ import ImageModal from "@/components/ImageModal";
 import Button from "@/components/Button";
 import CheckMark from "@/components/Checkmark";
 import CrossMark from "@/components/Crossmark";
-import styles from "./UploadAnimation.module.css";
 import CopyButton from "./CopyButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
@@ -11,6 +10,7 @@ import { faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { faLock } from "@fortawesome/free-solid-svg-icons";
 import UploadAnimation from "./UploadAnimation";
 import OCRButton from "./OCRButton";
+import { TransactionCardSkeleton } from "./Skeleton";
 type Transaction = {
   id: string;
   status: string;
@@ -50,7 +50,7 @@ export default function TransactionCard({
     accountName: "xxx... x",
     amount: "...",
   });
-  const [isOcr, ] = useState(false);
+  const [isOcr] = useState(false);
   const [fontawesomeIcon, setFontawesomeIcon] =
     useState<IconDefinition>(faEyeSlash);
   const handleAccept = () => {
@@ -143,6 +143,8 @@ export default function TransactionCard({
     }
   };
 
+  if (!transaction) return <TransactionCardSkeleton />;
+
   return (
     <div className="relative">
       {action && (
@@ -152,7 +154,7 @@ export default function TransactionCard({
       )}
 
       <div
-        className={`${styles.shadow} absolute top-0 left-0 w-full h-full rounded-[8px]`}
+        className={`shadow absolute top-0 left-0 w-full h-full rounded-[8px]`}
       ></div>
 
       <div className="relative border border-black w-full h-[212px] rounded-[8px] px-5 py-6 flex flex-col gap-[1px] bg-white dark:bg-primary-dark ">
@@ -221,6 +223,48 @@ export default function TransactionCard({
           {timeAgo(transaction.timestamp)}
         </span>
       </div>
+      <style jsx>{`
+        .shadow {
+          position: absolute;
+          top: 0;
+          left: 0;
+          height: 100%;
+          width: 100%;
+          border-radius: 8px;
+          filter: blur(25px);
+          z-index: 0;
+          opacity: 1;
+          overflow: hidden;
+        }
+
+        .shadow::before {
+          content: "";
+          position: absolute;
+          top: -25%;
+          left: -25%;
+          height: 150%;
+          width: 150%;
+          background: conic-gradient(
+            #4b82d4,
+            #6a29e9,
+            #4b82d4,
+            #6a29e9,
+            #c58357,
+            #ffc940,
+            #4b82d4
+          );
+          animation: shadow-animate 5s linear infinite;
+        }
+
+        @keyframes shadow-animate {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+      `}</style>
     </div>
   );
 }
