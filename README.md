@@ -26,6 +26,6 @@ This project was built to help my dad handle GCash transactions at his store eve
 
 ### 💻 Frontend
 
-- **Next.js (React)** – mobile-first web app for reviewing transactions and receipts
+- **Next.js (React)** – mobile-first web app for managing transactions
 - **Tailwind CSS** – clean and responsive UI
 - **Firebase Client SDK** – for real-time data rendering and state updates
