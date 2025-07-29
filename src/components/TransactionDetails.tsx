@@ -38,7 +38,8 @@ const TransactionDetails = ({ data, isOpen, onClose }: ModalProps) => {
   const [ocrData, setOcrData] = useState<OCR | null>(null);
   const [action, setAction] = useState<"ocr" | null>(null);
   const [showTooltip, setShowTooltip] = useState(false);
-  const [copied, setCopied] = useState(false);
+  const [uploadscopied, setUploadsCopied] = useState(false);
+  const [receiptcopied, setReceiptCopied] = useState(false);
   useEffect(() => {
     if (isOpen) {
       // Start animation shortly after mount
@@ -181,23 +182,40 @@ const TransactionDetails = ({ data, isOpen, onClose }: ModalProps) => {
                       <button
                         onClick={() => {
                           navigator.clipboard.writeText(data.imageUrl);
-                          setCopied(true);
-                          setTimeout(() => setCopied(false), 1500);
+                          setUploadsCopied(true);
+                          setTimeout(() => setUploadsCopied(false), 1500);
                         }}
                         title={data.imageUrl}
                         className="truncate max-w-[140px] text-blue-400 hover:underline"
                       >
                         {data.imageUrl}
                       </button>
-                      {copied && <span className=" text-xs ml-2">Copied!</span>}
+                      {uploadscopied && (
+                        <span className=" text-xs ml-2">Copied!</span>
+                      )}
                     </li>
                     <li>
                       <strong>isRequested:</strong>{" "}
                       {data.isRequested ? "true" : "false"}
                     </li>
-                    <li>
-                      <strong>receiptImage:</strong>{" "}
-                      {data.receiptimageUrl ? data.receiptimageUrl : "null"}
+                    <li className="flex gap-2 items-center">
+                      <strong>receiptimageUrl:</strong>
+                      <button
+                        onClick={() => {
+                          navigator.clipboard.writeText(
+                            data.receiptimageUrl ?? ""
+                          );
+                          setReceiptCopied(true);
+                          setTimeout(() => setReceiptCopied(false), 1500);
+                        }}
+                        title={data.receiptimageUrl}
+                        className="truncate max-w-[140px] text-blue-400 hover:underline"
+                      >
+                        {data.receiptimageUrl}
+                      </button>
+                      {receiptcopied && (
+                        <span className=" text-xs ml-2">Copied!</span>
+                      )}
                     </li>
                     <li>
                       <strong>transactionType:</strong> Cash-In

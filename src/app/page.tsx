@@ -14,9 +14,9 @@ import TransactionDetails from "@/components/TransactionDetails";
 import TransactionHistory from "@/components/TransactionHistory";
 import Image from "next/image";
 import CashinIcon from "../../public/cashin2.png";
-import CashinIconDark from "../../public/cashin-dark.png"
+import CashinIconDark from "../../public/cashin-dark.png";
 import ReceiptIcon from "../../public/receipt.png";
-import ReceiptIconDark from "../../public/receipt-dark.png"
+import ReceiptIconDark from "../../public/receipt-dark.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleUser } from "@fortawesome/free-solid-svg-icons";
 import TransactionCard from "@/components/TransactionCard";
@@ -46,7 +46,7 @@ export default function Home() {
   const [showTransactionHistory, setShowTransactionHistory] = useState(false);
   const { user } = useAuth();
   const isLoading = useAtomValue(globalLoadingAtom);
-  const {theme} = useTheme();
+  const { theme } = useTheme();
   const getPriorityScore = (transaction: Transaction) => {
     if (
       transaction.isRequested &&
@@ -74,7 +74,7 @@ export default function Home() {
     () => console.log("latest", latestTransaction),
     [latestTransaction]
   );
-  
+
   const handleModal = (tx: Transaction) => {
     setModalOpen(true);
     setSelectedTransaction(tx);
@@ -99,38 +99,33 @@ export default function Home() {
         <div className="bg-[#FFFFFF]  dark:bg-primary-dark 0 mx-5 ">
           {!isQueryLoading ? (
             <div className="flex justify-between py-7">
-            <div className="flex">
-              <FontAwesomeIcon
-                icon={faCircleUser}
-                size="3x"
-                className=" text-black dark:text-white w-12 h-12"
-              />
-              <h1 className=" m-3 dark:text-white">
-                {user
-                  ? "Welcome back, Roy"
-                  : !isLoading
-                  ? "Guest mode. Please log in."
-                  : "Welcome back, Roy"}
-              </h1>
+              <div className="flex">
+                <FontAwesomeIcon
+                  icon={faCircleUser}
+                  size="3x"
+                  className=" text-black dark:text-white w-12 h-12"
+                />
+                <h1 className=" m-3 dark:text-white">
+                  {user
+                    ? "Welcome back, Roy"
+                    : !isLoading
+                    ? "Guest mode. Please log in."
+                    : "Welcome back, Roy"}
+                </h1>
+              </div>
+              <SignInModal />
             </div>
-            <SignInModal />
-          </div>
           ) : (
-            <div
-                       
-                        className="flex items-center justify-between animate-pulse py-8 "
-                      >
-                        <div className="flex items-center gap-x-3">
-                          <div className="h-12 w-12 rounded-full bg-gray-300 dark:bg-gray-700" />
-                          <div className="space-y-2">
-                            <div className="h-4 w-28 bg-gray-300 dark:bg-gray-700 rounded" />
-                            
-                          </div>
-                        </div>
-                        <div className=" bg-gray-300 dark:bg-gray-700 rounded-full w-7 h-7" />
-                      </div>
+            <div className="flex items-center justify-between animate-pulse py-8 ">
+              <div className="flex items-center gap-x-3">
+                <div className="h-12 w-12 rounded-full bg-gray-300 dark:bg-gray-700" />
+                <div className="space-y-2">
+                  <div className="h-4 w-28 bg-gray-300 dark:bg-gray-700 rounded" />
+                </div>
+              </div>
+              <div className=" bg-gray-300 dark:bg-gray-700 rounded-full w-7 h-7" />
+            </div>
           )}
-          
 
           {latestTransaction ? (
             <TransactionCard
@@ -141,10 +136,7 @@ export default function Home() {
             <div
               role="status"
               className="flex items-center justify-center h-[212px] w-full bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700"
-            >
-              
-              
-            </div>
+            ></div>
           )}
 
           <div>
@@ -158,41 +150,44 @@ export default function Home() {
                 <div className="max-h-64 overflow-y-auto">
                   {!isQueryLoading ? (
                     <div>
-                      {scored.filter((tx) => tx.id !== latestTransaction?.id).map((tx) => (
-                        <div
-                          key={tx.id}
-                          className="flex items-center justify-between pb-3 pt-3 last:pb-0"
-                          onClick={() => handleModal(tx)}
-                        >
-                          <div className="flex items-center gap-x-3">
-                            <Image
-src={
-  tx.isRequested
-    ? theme === 'dark'
-      ? ReceiptIconDark
-      : ReceiptIcon
-    : theme === 'dark'
-      ? CashinIconDark
-      : CashinIcon
-}                              alt="cashinicon"
-                              className="relative inline-block h-8 w-8 rounded-full object-cover object-center"
-                            />
-                            <div>
-                              <h6 className="text-slate-800 font-semibold dark:text-white">
-                                {tx.isRequested
-                                  ? "Requesting receipt"
-                                  : "Cash-In"}
-                              </h6>
-                              <p className="text-slate-500 text-sm dark:text-gray-400">
-                                {timeAgo(tx.timestamp)}
-                              </p>
+                      {scored
+                        .filter((tx) => tx.id !== latestTransaction?.id)
+                        .map((tx) => (
+                          <div
+                            key={tx.id}
+                            className="flex items-center justify-between pb-3 pt-3 last:pb-0"
+                            onClick={() => handleModal(tx)}
+                          >
+                            <div className="flex items-center gap-x-3">
+                              <Image
+                                src={
+                                  tx.isRequested
+                                    ? theme === "dark"
+                                      ? ReceiptIconDark
+                                      : ReceiptIcon
+                                    : theme === "dark"
+                                    ? CashinIconDark
+                                    : CashinIcon
+                                }
+                                alt="cashinicon"
+                                className="relative inline-block h-8 w-8 rounded-full object-cover object-center"
+                              />
+                              <div>
+                                <h6 className="text-slate-800 font-semibold dark:text-white">
+                                  {tx.isRequested
+                                    ? "Requesting receipt"
+                                    : "Cash-In"}
+                                </h6>
+                                <p className="text-slate-500 text-sm dark:text-gray-400">
+                                  {timeAgo(tx.timestamp)}
+                                </p>
+                              </div>
                             </div>
+                            <button className="px-5 py-2.5 bg-[#1A1A1A] text-white rounded-3xl text-[14px] leading-4">
+                              DETAILS
+                            </button>
                           </div>
-                          <button className="px-5 py-2.5 bg-[#1A1A1A] text-white rounded-3xl text-[14px] leading-4">
-                            DETAILS
-                          </button>
-                        </div>
-                      ))}
+                        ))}
                     </div>
                   ) : (
                     Array.from({ length: 4 }).map((_, index) => (
@@ -238,48 +233,47 @@ src={
                     View all
                   </button>
                 </div>
-                
-                  {!isQueryLoading ? (<div className="divide-y divide-slate-200">
+
+                {!isQueryLoading ? (
+                  <div className="divide-y divide-slate-500">
                     {unscored.slice(0, 3).map((tx) => (
-                    <div
-                      key={tx.id}
-                      className="flex items-center justify-between pb-3 pt-3 last:pb-0"
-                      onClick={() => handleModal(tx)}
-                    >
-                      <div className="flex items-center gap-x-3">
-                        <div>
-                          <h6 className="text-slate-800 font-semibold dark:text-white">
-                            {tx.status}
-                          </h6>
-                          <p className="text-slate-500 text-sm dark:text-slate-400">
-                            Cash-In
-                          </p>
-                        </div>
-                      </div>
-                      <h6 className="text-slate-500 font-medium dark:text-slate-400">
-                        {timeAgo(tx.timestamp)}
-                      </h6>
-                    </div>
-                  ))}
-                  </div>) : (
-                    Array.from({ length: 2 }).map((_, index) => (
                       <div
-                        key={index}
-                        className="flex items-center justify-between pb-3 pt-3 last:pb-0 animate-pulse"
+                        key={tx.id}
+                        className="flex items-center justify-between pb-3 pt-3 last:pb-0"
+                        onClick={() => handleModal(tx)}
                       >
                         <div className="flex items-center gap-x-3">
-                          
-                          <div className="space-y-2">
-                            <div className="h-4 w-28 bg-gray-300 dark:bg-gray-700 rounded" />
-                            <div className="h-3 w-20 bg-gray-200 dark:bg-gray-600 rounded" />
+                          <div>
+                            <h6 className="text-slate-800 font-semibold dark:text-white">
+                              {tx.status}
+                            </h6>
+                            <p className="text-slate-500 text-sm dark:text-slate-400">
+                              Cash-In
+                            </p>
                           </div>
                         </div>
-                        <div className="px-5 py-2.5 bg-gray-300 dark:bg-gray-700 rounded w-20 h-3" />
+                        <h6 className="text-slate-500 font-medium dark:text-slate-400">
+                          {timeAgo(tx.timestamp)}
+                        </h6>
                       </div>
-                    ))
-                  )}
-                  
-                
+                    ))}
+                  </div>
+                ) : (
+                  Array.from({ length: 2 }).map((_, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center justify-between pb-3 pt-3 last:pb-0 animate-pulse"
+                    >
+                      <div className="flex items-center gap-x-3">
+                        <div className="space-y-2">
+                          <div className="h-4 w-28 bg-gray-300 dark:bg-gray-700 rounded" />
+                          <div className="h-3 w-20 bg-gray-200 dark:bg-gray-600 rounded" />
+                        </div>
+                      </div>
+                      <div className="px-5 py-2.5 bg-gray-300 dark:bg-gray-700 rounded w-20 h-3" />
+                    </div>
+                  ))
+                )}
 
                 {selectedTransaction && (
                   <TransactionDetails
