@@ -38,7 +38,7 @@ const OtherTransactions = ({
       </div>
 
       {!isQueryLoading ? (
-        <div className="divide-y divide-slate-500">
+        <div className="divide-y divide-slate-200 dark:divide-slate-600">
           {unscored.slice(0, 3).map((tx) => (
             <div
               key={tx.id}

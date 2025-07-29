@@ -64,7 +64,7 @@ const TransactionHistory = ({ data, onClose }: TransactionProps) => {
             {/* Empty element to balance the layout */}
             <div className="w-8" /> {/* Same width as the back button */}
           </div>
-          <div className="divide-y divide-slate-500">
+          <div className="divide-y divide-slate-200 dark:divide-slate-700">
             {Object.entries(grouped).map(([date, transactions]) => (
               <div key={date} className="mb-4">
                 <h6 className="text-slate-500 text-2xl font-semibold mb-2">
