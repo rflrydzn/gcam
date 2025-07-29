@@ -1,36 +1,30 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# GCam: Assistive GCash Transaction Relay System
 
-## Getting Started
+## 🎯 Project Context
 
-First, run the development server:
+This project was built to help my dad handle GCash transactions at his store even when I'm away. Customers usually write their GCash details on paper. With one press of a button, my dad can capture the paper using an ESP32-CAM. The image is sent to me through the Pushover app. I complete the transaction remotely and update its status through a web dashboard. If a receipt is needed, I upload a screenshot that appears on my dad’s small TFT screen connected to the ESP32. This ensures accessibility and independence for him, especially since he's not comfortable using smartphones.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+🖥️ **URL**: [https://gcam.vercel.app](https://gcam.vercel.app)  
+📩 **Want a demo?** Email me at **kuhaku.blank.rd@gmail.com**
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🛠 Tech Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 🔌 Hardware
 
-## Learn More
+- **ESP32-CAM** – captures transaction notes and sends images via Flask
+- **TFT ILI9488 SPI Display** – displays receipt image when uploaded
+- **Pushbuttons + LED** – input system for triggering camera or confirming receipt
 
-To learn more about Next.js, take a look at the following resources:
+### 🌐 Backend
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Flask (PythonAnywhere)** – handles image upload, pushes notifications via Pushover, stores image URLs
+- **Firebase Realtime Database** – real-time syncing of transaction records and receipt URLs
+- **Google Gemini** – extracts text like GCash number and amount from captured images for quick review
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 💻 Frontend
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Next.js (React)** – mobile-first web app for reviewing transactions and receipts
+- **Tailwind CSS** – clean and responsive UI
+- **Firebase Client SDK** – for real-time data rendering and state updates
