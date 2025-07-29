@@ -14,7 +14,7 @@ This project was built to help my dad handle GCash transactions at his store eve
 ### 🔌 Hardware
 
 - **ESP32-CAM** – captures transaction notes and sends images via Flask
-- **TFT ILI9488 SPI Display** – displays receipt image when uploaded
+- **TFT ILI9488 SPI Display** – displays status and receipt image when uploaded
 - **Pushbuttons + LED** – input system for triggering camera or confirming receipt
 
 ### 🌐 Backend
@@ -22,6 +22,7 @@ This project was built to help my dad handle GCash transactions at his store eve
 - **Flask (PythonAnywhere)** – handles image upload, pushes notifications via Pushover, stores image URLs
 - **Firebase Realtime Database** – real-time syncing of transaction records and receipt URLs
 - **Google Gemini** – extracts text like GCash number and amount from captured images for quick review
+- **Pushover API** – notifies my phone when a new transaction is created
 
 ### 💻 Frontend
 
